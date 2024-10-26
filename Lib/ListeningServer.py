@@ -1,7 +1,9 @@
+from concurrent.futures import ThreadPoolExecutor
+from wsgiref.simple_server import WSGIServer
+
 from flask import Flask, request
-from werkzeug.serving import make_server
+from werkzeug.serving import make_server, WSGIRequestHandler
 import threading
-import plugins.Control as control
 import Lib.OnebotAPI as OnebotAPI
 import Lib.Configs as Configs
 import Lib.BotController as BotController
@@ -24,21 +26,177 @@ data_path = os.path.join(work_path, "data")
 
 last_heartbeat_time = 0  # 上一次心跳包的时间
 heartbeat_interval = -1  # 心跳包间隔
+last_restart_time = 0  # 上一次重启的时间
 
 
 def heartbeat_check():
-    global last_heartbeat_time, heartbeat_interval
+    global last_heartbeat_time, heartbeat_interval, last_restart_time
     while True:
         if heartbeat_interval > 0:
             if time.time() - last_heartbeat_time > heartbeat_interval * 2:
-                logger.warning("心跳包超时，请检查 Onebot 实现端")
-                if config.auto_restart_onebot:
-                    logger.warning("即将自动重启实现端")
+                if config.auto_restart_onebot and time.time() - last_restart_time > 30:
+                    logger.warning("将自动重启 Onebot 实现端！")
                     api.set_restart()
+                    last_restart_time = time.time()
+                for i in range(10):
+                    if time.time() - last_heartbeat_time > heartbeat_interval * 2:
+                        time.sleep(1)
+                    else:
+                        logger.info("心跳包已恢复正常")
+                        break
         time.sleep(1)
 
 
 threading.Thread(target=heartbeat_check, daemon=True).start()
+
+# TODO: 实现从一大串的if嵌套转为下面这段
+"""
+log_map = [
+    {
+        "rules": [
+            {
+                "type": "post_type",
+                "value": "message"
+            }
+        ],
+        "value": [
+            {
+                "rules": [
+                    {
+                        "type": "message_type",
+                        "value": "private"
+                    }
+                ],
+                "code": \"\"\"
+    message = QQRichText.QQRichText(data["message"])
+    user = QQDataCacher.get_user_data(data.user_id,
+                                      data.user_id,
+                                      data.sender.get("nickname"),
+                                      data.sender.get("sex"),
+                                      data.sender.get("age")
+                                      )
+    \"\"\",
+                "value": [
+                    {
+                        "rules": [
+                            {
+                                "type": "sub_type",
+                                "value": "friend"
+                            }
+                        ],
+                        "value": '"收到好友 %s(%s) 的消息: %s (%s)" % (user.nickname, user.user_id, str(message), data.message_id)'
+                    },
+                    {
+                        "rules": [
+                            {
+                                "type": "sub_type",
+                                "value": "group"
+                            }
+                        ],
+                        "code": "group = QQDataCacher.get_group_data(data.group_id)",
+                        "value": '"收到来自群 %s(%s) 内 %s(%s) 的消息: %s (%s)" % (group.group_name, data.group_id, user.nickname, user.user_id, str(message), data.message_id)'
+                    },
+                    {
+                        "rules": [
+                            {
+                                "type": "sub_type",
+                                "value": "other"
+                            }
+                        ],
+                        "value": '"收到来自 %s(%s) 的消息: %s (%s)" % (user.nickname, user.user_id, str(message), data.message_id)'
+                    }
+                ]
+            },
+            {
+                "rules": [
+                    {
+                        "type": "message_type",
+                        "value": "group"
+                    }
+                ],
+                "code": \"\"\"
+group = QQDataCacher.get_group_data(data.group_id)
+user = QQDataCacher.get_group_user_data(data.group_id, data.user_id)
+message = QQRichText.QQRichText(data.message)
+# 获取群文件夹路径
+group_path = os.path.join(data_path, "groups", str(data.group_id))
+# 如果获取群文件夹路径不存在, 则创建
+if not os.path.exists(group_path):
+    os.makedirs(group_path)
+\"\"\",
+                "value": \"\"\""收到群 %s(%s) 内 %s(%s) 的消息: %s (%s)" % (
+group.group_name, group.group_id, user.get_group_name(), user.user_id, str(message),
+data.message_id)\"\"\"
+            }
+        ]
+    },
+    {
+        "rules": [
+            {
+                "type": "post_type",
+                "value": "request"
+            }
+        ],
+        "value": [
+            {
+                "rules": [
+                    {
+                        "type": "request_type",
+                        "value": "friend"
+                    }
+                ],
+                "code": "user = QQDataCacher.get_user_data(data.user_id)",
+                "value": '"收到来自 %s(%s) 的加好友请求: %s" % (user.nickname, user.user_id, data.comment)'
+            },
+            {
+                "rules": [
+                    {
+                        "type": "request_type",
+                        "value": "group"
+                    }
+                ],
+                "code": \"\"\"group = QQDataCacher.get_group_data(data.group_id)
+user = QQDataCacher.get_group_user_data(data.group_id, data.user_id)
+\"\"\",
+                "value": [
+                    {
+                        "rules": [
+                            {
+                                "type": "sub_type",
+                                "value": "invite"
+                            }
+                        ],
+                        "value": '"收到来自群 %s(%s) 内用户 %s(%s) 的加群邀请" % (group.group_name, group.group_id, user.get_group_name(), user.user_id)'
+                    },
+                    {
+                        "rules": [
+                            {
+                                "type": "sub_type",
+                                "value": "add"
+                            }
+                        ],
+                        "value": [
+                            {
+                                "rules": [
+                                    {
+                                        "type": "comment",
+                                        "value": ""
+                                    }
+                                ],
+                                "value": '"群 %s(%s) 收到来自用户 %s(%s) 的加群请求\n flag: %s" % (group.group_name, group.group_id, user.get_group_name(), user.user_id, data.flag)'
+                            },
+                            {
+                                "rules": [],
+                                "value": '"群 %s(%s) 收到来自用户 %s(%s) 的加群请求: %s\n flag: %s" %(group.group_name, group.group_id, user.get_group_name(), user.user_id, data.comment, data.flag)'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]
+"""
 
 
 # 上报
@@ -57,15 +215,10 @@ def post_data():
     if len(request_list) > 100:
         request_list.pop(0)
 
-    if data.post_type + "_type" in data:
-        logger.debug("广播事件：%s" % data.post_type + "_type")
-        threading.Thread(
-            target=lambda: EventManager.Event((data.post_type, data[data.post_type + "_type"]), data)).start()
-    else:
-        logger.debug("广播事件：%s" % data.post_type)
-        threading.Thread(target=lambda: EventManager.Event(data.post_type, data)).start()
+    if data.post_type == "message_sent":
+        data.post_type = "message"
 
-    if data.post_type == "message" or data.post_type == "message_sent":
+    if data.post_type == "message":
         # 私聊消息
         if data.message_type == "private":
             message = data.message.render()
@@ -126,8 +279,14 @@ def post_data():
                 logger.info("收到群聊%s(群名：%s)用户 %s (昵称：%s)的加群邀请" %
                             (group.group_id, group.group_name, user.user_id,user.get_group_name()))
             elif data.sub_type == "add":
-                logger.info("收到群聊%s(群名：%s)用户 %s (昵称：%s)的加群请求" %
-                            (group.group_id, group.group_name, user.user_id,user.get_group_name()))
+                if data.comment == "":
+                    logger.info("收到群聊%s(群名：%s)用户 %s (昵称：%s)的加群请求\n flag: %s" %
+                                (group.group_id, group.group_name, user.user_id,user.get_group_name(), data.flag)
+                                )
+                else:
+                    logger.info("收到群聊%s(群名：%s)用户 %s (昵称：%s)的加群请求\n flag: %s" %
+                                (group.group_id, group.group_name, user.user_id,user.get_group_name(), data.comment, data.flag)
+                                )
         else:
             logger.warning(": %s" % data.event_json)
 
@@ -170,8 +329,13 @@ def post_data():
                 logger.warning("Bot被 %s(%s) 踢出群聊 %s(%s)" %
                             (operator.get_group_name(), operator.user_id, group.group_name, group.group_id))
                             
-                outtime=time.strftime("%H:%M:%S %Y-%m-%d", time.localtime())
-                BotController.send_message(QQRichText.QQRichText(f"[{outtime}]Bot被移出群聊{group.group_id}，若该操作非主动操作，请联系该群管理员"),user_id=control.admin[0])
+                outtime=str(time.strftime("%H:%M:%S %Y-%m-%d", time.localtime()))
+                try:
+                    import plugins.Control as Control
+                    Control.bot_has_kicked(outtime,group.group_id)
+                except:
+                    logger.error("核心插件异常")
+                
 
         # 群成员增加
         elif data.notice_type == "group_increase":
@@ -192,7 +356,8 @@ def post_data():
                             (group.group_name, group.group_id, operator.get_group_name(),
                              operator.user_id, user.get_group_name(), user.user_id))
                 try:
-                    BotController.send_message(QQRichText.QQRichText({"type": "image","data":{"file": "https://static.codemao.cn/pickduck/BJjoUrRAA.jpg"}}),group_id=group.group_id)
+                    import plugins.Control as Control
+                    Control.send_welcome_message()
                 except:
                     logger.error("核心插件异常")
 
@@ -303,10 +468,45 @@ def post_data():
     else:
         logger.warning("收到未知上报: %s" % data.event_json)
 
+    if data.post_type + "_type" in data:
+        logger.debug("广播事件：%s" % data[data.post_type + "_type"])
+        EventManager.Event((data.post_type, data[data.post_type + "_type"]), data)
+    else:
+        logger.debug("广播事件：%s" % data.post_type)
+        EventManager.Event(data.post_type, data)
+
     # 若插件包含main函数则运行
     PluginManager.run_plugin_main(data)
 
     return "ok", 204
 
 
-server = make_server(config.server_host, config.server_port, app, threaded=True)
+class ThreadPoolWSGIServer(WSGIServer):
+    def __init__(self, server_address, app=None, max_workers=10, passthrough_errors=False,
+                 handler_class=WSGIRequestHandler, **kwargs):
+        super().__init__(server_address, handler_class, **kwargs)
+        self.executor = ThreadPoolExecutor(max_workers=max_workers)
+        self.app = app
+        self.ssl_context = None
+        self.multithread = True
+        self.multiprocess = False
+        self.threaded = True
+        self.passthrough_errors = passthrough_errors
+
+    def handle_request(self):
+        request, client_address = self.get_request()
+        if self.verify_request(request, client_address):
+            self.executor.submit(self.process_request, request, client_address)
+
+    def serve_forever(self):
+        while True:
+            self.handle_request()
+
+
+class ThreadPoolWSGIRequestHandler(WSGIRequestHandler):
+    def handle(self):
+        super().handle()
+
+
+server = ThreadPoolWSGIServer((config.server_host, config.server_port), app=app, max_workers=config.max_workers)
+server.RequestHandlerClass = ThreadPoolWSGIRequestHandler
