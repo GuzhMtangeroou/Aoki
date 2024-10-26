@@ -34,6 +34,7 @@ def heartbeat_check():
     while True:
         if heartbeat_interval > 0:
             if time.time() - last_heartbeat_time > heartbeat_interval * 2:
+                logger.warning("心跳包超时！请检查 Onebot 实现端是否正常运行！")
                 if config.auto_restart_onebot and time.time() - last_restart_time > 30:
                     logger.warning("将自动重启 Onebot 实现端！")
                     api.set_restart()
