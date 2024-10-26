@@ -10,6 +10,13 @@ import random
 from collections import OrderedDict
 import Lib.Logger as Logger
 
+#   __  __       ____       _         ____        _   _____
+#  |  \/  |_   _|  _ \ __ _(_)_ __   | __ )  ___ | |_|___  \
+#  | |\/| | | | | |_) / _` | | '_ \  |  _ \ / _ \| __| __) |
+#  | |  | | |_| |  _ < (_| | | | | | | |_) | (_) | |_ / __/
+#  |_|  |_|\__,_|_| \_\__,_|_|_| |_| |____/ \___/ \__|_____|
+#by xiaosu
+
 work_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 data_path = os.path.join(work_path, "data")
 logs_path = os.path.join(work_path, "logs")
@@ -163,14 +170,3 @@ def function_cache(max_size: int, expiration_time: int = -1):
 
     return cache_decorator
 
-
-# 结束运行
-@atexit.register
-def finalize_and_cleanup():
-    logger.info("MuRainBot即将关闭，正在删除缓存")
-
-    clean_cache()
-
-    logger.warning("MuRainBot结束运行！")
-    logger.info("再见！\n")
-    os._exit(0)

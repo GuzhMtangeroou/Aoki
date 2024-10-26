@@ -66,6 +66,8 @@ class GlobalConfig(Config):
         self.server_port = self.raw_config["server"]["port"]
         self.api_host = self.raw_config["api"]["host"]
         self.api_port = self.raw_config["api"]["port"]
+        self.rc_host = self.raw_config["remotecontrol"]["host"]
+        self.rc_host_port = self.raw_config["remotecontrol"]["port"]
         self.max_workers = self.raw_config["thread_pool"]["max_workers"]
         self.qq_data_cache = self.raw_config["qq_data_cache"]["enable"]
         self.expire_time = self.raw_config["qq_data_cache"]["expire_time"]

@@ -97,9 +97,9 @@ def post_data():
             user = QQDataCacher.get_group_user_data(data.group_id, data.user_id)
             message = QQRichText.QQRichText(data.message)
 
-            logger.info("收到群 %s(%s) 内 %s(%s) 的消息: %s (%s)" % (
-                group.group_name, group.group_id, user.get_group_name(), user.user_id, str(message),
-                data.message_id))
+            logger.info("收到群聊%s(群名：%s)消息：%s(%s),来自用户 %s (群内昵称：%s)" % (
+                group.group_name, group.group_id, str(message),
+                data.message_id,user.get_group_name(), user.user_id))
 
             # 获取群文件夹路径
             group_path = os.path.join(data_path, "groups", str(data.group_id))
@@ -109,33 +109,33 @@ def post_data():
                 os.makedirs(group_path)
 
         else:
-            logger.warning("收到未知的上报: %s" % data.event_json)
+            logger.warning("收到未知上报: %s" % data.event_json)
 
     elif data.post_type == "request":
         # 加好友邀请
         if data.request_type == "friend":
             user = QQDataCacher.get_user_data(data.user_id)
-            logger.info("收到来自 %s(%s) 的加好友请求: %s" %
+            logger.info("收到来自 %s(%s) 的好友请求: %s" %
                         (user.nickname, user.user_id, data.comment))
         # 加群邀请
         elif data.request_type == "group":
             group = QQDataCacher.get_group_data(data.group_id)
             user = QQDataCacher.get_group_user_data(data.group_id, data.user_id)
             if data.sub_type == "invite":
-                logger.info("收到来自群 %s(%s) 内用户 %s(%s) 的加群邀请" %
-                            (group.group_name, group.group_id, user.get_group_name(), user.user_id))
+                logger.info("收到群聊%s(群名：%s)用户 %s (昵称：%s)的加群邀请" %
+                            (group.group_id, group.group_name, user.user_id,user.get_group_name()))
             elif data.sub_type == "add":
-                logger.info("群 %s(%s) 收到来自用户 %s(%s) 的加群请求" %
-                            (group.group_name, group.group_id, user.get_group_name(), user.user_id))
+                logger.info("收到群聊%s(群名：%s)用户 %s (昵称：%s)的加群请求" %
+                            (group.group_id, group.group_name, user.user_id,user.get_group_name()))
         else:
-            logger.warning("收到未知的上报: %s" % data.event_json)
+            logger.warning(": %s" % data.event_json)
 
     elif data.post_type == "notice":
         # 群文件上传
         if data.notice_type == "group_upload":
             group = QQDataCacher.get_group_data(data.group_id)
             user = QQDataCacher.get_group_user_data(data.group_id, data.user_id)
-            logger.info("群 %s(%s) 内 %s(%s) 上传了文件: %s" %
+            logger.info("群 %s(%s) 内 %s(群内昵称：%s) 上传了文件: %s" %
                         (group.group_name, group.group_id, user.get_group_name(), user.user_id, data.file))
 
         # 群管理员变动
@@ -158,16 +158,17 @@ def post_data():
             user = QQDataCacher.get_group_user_data(data.group_id, data.user_id)
             operator = QQDataCacher.get_group_user_data(data.group_id, data.operator_id)
             if data.sub_type == "leave":
-                logger.info("群 %s(%s) 内 %s(%s) 退出了群聊" %
+                logger.info("群 %s(%s) 内 %s(%s) 退出群聊" %
                             (group.group_name, group.group_id, user.get_group_name(), data.user_id))
             elif data.sub_type == "kick":
                 logger.info(
-                    "检测到 %s(%s) 被 %s(%s) 踢出了群聊 %s(%s)" %
+                    " %s(%s) 被 %s(%s) 踢出群聊 %s(%s)" %
                     (user.get_group_name(), user.user_id, operator.get_group_name(),
                      operator.user_id, group.group_name, data.group_id))
             elif data.sub_type == "kick_me" or user.user_id == config.user_id:
-                logger.info("检测到Bot被 %s(%s) 踢出了群聊 %s(%s)" %
+                logger.warning("Bot被 %s(%s) 踢出群聊 %s(%s)" %
                             (operator.get_group_name(), operator.user_id, group.group_name, group.group_id))
+                            
                 outtime=time.strftime("%H:%M:%S %Y-%m-%d", time.localtime())
                 BotController.send_message(QQRichText.QQRichText(f"[{outtime}]Bot被移出群聊{group.group_id}，若该操作非主动操作，请联系该群管理员"),user_id=control.admin[0])
 
@@ -180,12 +181,19 @@ def post_data():
                 logger.info("群%s(%s) 内管理员 %s(%s) 通过了新成员 %s(%s) 的加群请求" %
                             (group.group_name, group.group_id, operator.get_group_name(),
                              operator.user_id, user.get_group_name(), user.user_id))
-                BotController.send_message(QQRichText.QQRichText({"type": "image","data":{"file": "https://static.codemao.cn/pickduck/BJjoUrRAA.jpg"}}),group_id=group.group_id)
+                try:
+                    BotController.send_message(QQRichText.QQRichText({"type": "image","data":{"file": "https://static.codemao.cn/pickduck/BJjoUrRAA.jpg"}}),group_id=group.group_id)
+                except:
+                    logger.error("核心插件异常")
+
             elif data.sub_type == "invite":
                 logger.info("群 %s(%s) 内 %s(%s) 邀请 %s(%s) 加入了群聊" %
                             (group.group_name, group.group_id, operator.get_group_name(),
                              operator.user_id, user.get_group_name(), user.user_id))
-                BotController.send_message(QQRichText.QQRichText({"type": "image","data":{"file": "https://static.codemao.cn/pickduck/BJjoUrRAA.jpg"}}),group_id=group.group_id)
+                try:
+                    BotController.send_message(QQRichText.QQRichText({"type": "image","data":{"file": "https://static.codemao.cn/pickduck/BJjoUrRAA.jpg"}}),group_id=group.group_id)
+                except:
+                    logger.error("核心插件异常")
 
         # 群禁言
         elif data.notice_type == "group_ban":
@@ -194,7 +202,7 @@ def post_data():
             operator = QQDataCacher.get_group_user_data(data.group_id, data.operator_id)
             # 禁言
             if data.sub_type == "ban":
-                logger.info("群 %s(%s) 内 %s(%s) 被 %s(%s) 禁言了" %
+                logger.info("群 %s(%s) 内 %s(%s) 被 %s(%s) 禁言" %
                             (group.group_name, group.group_id, user.get_group_name(),
                              user.user_id, operator.get_group_name(), operator.user_id))
             # 解除禁言
@@ -216,17 +224,17 @@ def post_data():
             operator = QQDataCacher.get_group_user_data(data.group_id, data.operator_id)
             # 撤回自己
             if data.operator_id == user.user_id:
-                logger.info("群 %s(%s) 内 %s(%s) 撤回了一条消息: %s" %
+                logger.info("群 %s(%s) 内 %s(%s) 撤回了消息: %s" %
                             (group.group_name, group.group_id, user.get_group_name(), user.user_id, data.message_id))
             else:
-                logger.info("群 %s(%s) 内 %s(%s) 被 %s(%s) 撤回了一条消息: %s" %
+                logger.info("群 %s(%s) 内 %s(%s) 被 %s(%s) 撤回消息: %s" %
                             (group.group_name, group.group_id, user.get_group_name(), user.user_id,
                              operator.get_group_name(), operator.user_id, data.message_id))
 
         # 好友消息撤回
         elif data.notice_type == "friend_recall":
             user = QQDataCacher.get_user_data(data.user_id)
-            logger.info("检测到好友 %s(%s) 撤回了一条消息: %s" %
+            logger.info("好友 %s(%s) 撤回了一条消息: %s" %
                         (user.user_id, user, data.message_id))
 
         elif data.notice_type == "notify":
@@ -262,7 +270,7 @@ def post_data():
                                 (group.group_name, group.group_id, user.get_group_name(), user.user_id))
 
             else:
-                logger.warning("收到未知的上报: %s" % data.event_json)
+                logger.warning(": %s" % data.event_json)
     # 元事件
     elif data.post_type == "meta_event":
         if data.meta_event_type == "lifecycle":
@@ -278,7 +286,7 @@ def post_data():
             if data.status.get("online") is not True or data.status.get("good") is not True:
                 logger.warning("心跳包异常，当前状态：%s" % data.status)
                 if config.auto_restart_onebot:
-                    logger.warning("即将自动重启 Onebot 实现端！")
+                    logger.warning("即将自动重启 Onebot 实现端")
                     api.set_restart()
 
             # 检查心跳包间隔是否正常
@@ -290,9 +298,9 @@ def post_data():
             heartbeat_interval = data.interval / 1000
 
         else:
-            logger.warning("收到未知的上报: %s" % data.event_json)
+            logger.warning("收到未知上报: %s" % data.event_json)
     else:
-        logger.warning("收到未知的上报: %s" % data.event_json)
+        logger.warning("收到未知上报: %s" % data.event_json)
 
     # 若插件包含main函数则运行
     PluginManager.run_plugin_main(data)
