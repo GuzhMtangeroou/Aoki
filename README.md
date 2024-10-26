@@ -3,10 +3,10 @@
 <h1 align="center">Aoki-青木</h1>
 
 ### 这是一个基于python适配onebot11协议的QQBot ~~(框架?)~~
-### 首先感谢您选择/使用了鐘山酱作为您的QQBot
+### 首先感谢您选择/使用了青木作为您的QQBot（框架）
 ##### ~~作者自己写着用的，有一些写的不好的地方还请见谅（不过估计也没人会用我这个项目吧）~~
 
-
+#### 最新版本：1.0（2024#4）
 
 <details>
 <summary>查看基本看目录结构</summary>
@@ -36,6 +36,7 @@
 │   ├─ xxxx-xx-xx.log  以往的日志
 │   ...
 ├─ plugins
+|   ├─ Control.py   核心插件（别删，删了也没啥大事）
 │   ├─ xxx.py   xxx插件代码
 │   ├─ yyy.py   yyy插件代码 
 │   ...
@@ -46,15 +47,16 @@
 │   ...
 ├─ config.yml   MRB2配置文件
 ├─ main.py      MRB2代码（运行这个即可启动）
-├─ README.md    这个文件就不用解释了吧（？）
-└─ README_en.md No need to explain this file, right?
+└─ README.md    这个文件就不用解释了吧（？）
+
+└─ README_en.md 诶你怎么似了（懒得翻译.png
 ```
 
 </details>
 
 
 ## 部署
-**作者在python3.10编写、测试均未发现问题，其他版本暂未测试**
+**作者在python3.11.4编写、测试均未发现问题，其他版本暂未测试**
 
 ### 可查看本项目的[`文档`](docs/readme.md) 
 
@@ -92,10 +94,10 @@
      tes:测试版本
      tes-pu:公测版本
      bad:存在问题/未经详细测试的版本
+     goose:诶你猜
 
 ## 插件
 ####一切都需要编写插件来实现功能
-### 请参照MRB2插件编写规范
 #### 不过我们有一些我们自己制作的插件，后续可能会放在源码中或是releases中
 
 ## ❤️鸣谢❤️

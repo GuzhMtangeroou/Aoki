@@ -7,7 +7,7 @@ import Lib.ThreadPool as ThreadPool
 
 logger = Logger.logger
 
-plugins = None
+plugins: list[dict] = None
 work_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 plugins_path = os.path.join(work_path, "plugins")
 
@@ -44,6 +44,9 @@ def load_plugins():
             logger.debug("插件 {} 加载成功，耗时 {}s".format(i, round(time.time() - t, 2)))
         except Exception as e:
             logger.error("导入插件 {} 时出现错误:{}".format(i, repr(e)))
+
+    plugins.sort(key=lambda x: x["name"])
+
     return plugins
 
 

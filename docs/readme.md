@@ -1,12 +1,13 @@
 # Aoki·文档
 > 本文档可能并非适用于最新的代码，如遇到错误请发送issue，随缘处理吧~~（要不你帮我中考？秒回）~~
+> 本文档以[`CC-BY-NC-SA`](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans)协议分发
 ### 在这里，你将会学会：
  - 如何部署
  - 如何使用
  - 如何使用KittenServerSDK
 
 ## 在这之前
-有点担心作者的精神状态（笑）
+😀📕📕针👍
 
 ## 部署
 > 首先我们需要下载这个项目
@@ -18,7 +19,7 @@
 > 很好，我相信你已经成功下载了这个项目，接下来开始配置~
 1. 打开下载的压缩包，解压
 2. 安装 [Python](https://www.python.org/downloads/)\
-~~什么？你说你不会装Python？那我建议你别用我这项目了~~
+~~什么？你说你不会装Python？那我建议你别用了~~
 3. 在终端运行 `python -m pip install -r requirements.txt`\
 ~~什么？你问我这个命令是干嘛的？它啊其实是用来安装本项目运行必须的依赖库的哦~~\
 ~~什么？你又问这个命令为什么运行不了？请检查你是否已经安装好了Python，以及你是否正确设置了环境变量，以及你是否已经将cmd/PowerShell切换到项目文件夹下~~
@@ -26,7 +27,7 @@
 > 很棒，你肯定已经成功运行了，那么此时你应该在终端内发现了几条log和一个ERROR提示，不要担心，这是正常情况，接下来我们来解决它~
 **附：正常启动的log**
 ```text
-[2024-10-06 12:26:06] [main.py] [INFO]: 当前版本：1.0(2024#3)
+[2024-10-06 12:26:06] [main.py] [INFO]: 当前版本：x.x(20xx#x)
 [2024-10-06 12:26:06] [main.py] [INFO]: Github：https://github.com/GuzhMtangeroou/Aoki/
 [2024-10-06 12:26:06] [main.py] [INFO]: 插件导入完成，共导入 4 个插件:
 [2024-10-06 12:26:06] [main.py] [INFO]:  - About: About 作者:？
@@ -116,3 +117,4 @@ Bot运行命令为`python main.py`
 在启动Bot同时启动`KittenServer.py`即可
 ### 注意
 `KittenServer.py`需要与`main.py`在同一目录下
+> #### 更进一步: [了解如何自行编写插件](plugin.md)
