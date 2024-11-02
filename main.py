@@ -3,18 +3,21 @@ import atexit
 import threading
 import Lib.ThreadPool
 from Lib import *
+import os
 
-BANNER = r""" __  __       ____       _         ____        _   _____
-|  \/  |_   _|  _ \ __ _(_)_ __   | __ )  ___ | |_|___  \
-| |\/| | | | | |_) / _` | | '_ \  |  _ \ / _ \| __| __) |
-| |  | | |_| |  _ < (_| | | | | | | |_) | (_) | |_ / __/
-|_|  |_|\__,_|_| \_\__,_|_|_| |_| |____/ \___/ \__|_____|
-https://github.com/xiaosuyyds/MuRainBot2
+BANNER = r"""
+                _    _ 
+     /\        | |  (_)
+    /  \   ___ | | ___ 
+   / /\ \ / _ \| |/ / |
+  / ____ \ (_) |   <| |
+ /_/    \_\___/|_|\_\_|                         
+https://github.com/GuzhMtangeroou/Aoki/
 """
 
 logger = Logger.logger
 VERSION = "1.0"  # 版本
-VERSION_WEEK = "2024#3"  # 版本周
+VERSION_WEEK = "2024#4"  # 版本周
 
 api = OnebotAPI.OnebotAPI()
 Lib.ThreadPool.init()
@@ -32,20 +35,11 @@ if not os.path.exists(cache_path):
     os.makedirs(cache_path)
 
 
-# 结束运行
-@atexit.register
-def finalize_and_cleanup():
-    logger.info("即将关闭，正在删除缓存")
 
-    clean_cache()
-
-    logger.info("结束运行")
-    logger.info("再见\n")
-    
 # 主函数
 if __name__ == '__main__':
     logger.info(f"当前版本：{VERSION}({VERSION_WEEK})")
-    logger.info("Github：https://github.com/GuzhMtangeroou/Aoki/")
+    print(BANNER)
 
     LibInfo.main_version, LibInfo.main_version_week = VERSION, VERSION_WEEK
 
