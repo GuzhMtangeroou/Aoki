@@ -117,4 +117,4 @@ Bot运行命令为`python main.py`
 在启动Bot同时启动`KittenServer.py`即可
 ### 注意
 `KittenServer.py`需要与`main.py`在同一目录下
-> #### 更进一步: [了解如何自行编写插件](plugin.md)
+> #### 更进一步: [了解如何自行编写插件](Writing_Plugins.md)
