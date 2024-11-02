@@ -109,49 +109,62 @@ class Command(metaclass=Meta):
 class SendGroupMsgCommand(Command):
     def __init__(self):
         super().__init__()
-        self.command_help = "send_group_msg <group_id> <message>: 发送消息到群"
+        self.command_help = "send_group_msg: 发送消息到群"
         self.command_name = "send_group_msg"
-        self.need_args = {
-            "group_id": {
-                "type": int,
-                "help": "要发送给的QQ群ID",
-                "default": 0,
-                "must": True
-            },
-            "message": {
-                "type": str,
-                "help": "发送的消息内容",
-                "default": "",
-                "must": True
-            }
-        }
 
     def run(self, input_command: CommandParsing, kwargs):
-        BotController.send_message(QQRichText.QQRichText(kwargs.get("message")), group_id=kwargs.get("group_id"))
+        try:
+            import tkinter
+            window = tkinter.Tk()
+            window.title("发送消息到群")
+            window.geometry("260x120")
+            lbl = tkinter.Label(window, text="发送到群",font=("Arial", 12))
+            lbl.grid(column=0, row=0)
+            lbl1 = tkinter.Label(window, text="发送内容",font=("Arial", 12))
+            lbl1.grid(column=0, row=2)
+            userID = tkinter.Entry(window, width=15,font=("Arial", 12))
+            userID.grid(column=1, row=0)
+            TexT = tkinter.Entry(window, width=15,font=("Arial", 12))
+            TexT.grid(column=1, row=2)
+            def clicked():
+                BotController.send_message(QQRichText.QQRichText(str(tkinter.Entry.get(TexT))), group_id=int(tkinter.Entry.get(userID)))
+                window.destroy()
+            btn = tkinter.Button(window, text="发送", command=clicked,font=("Arial", 12))
+            btn.grid(column=3, row=3)
+            window.mainloop()
+        except:
+            logger.error("弹出窗口异常")
 
 
 class SendMsgCommand(Command):
     def __init__(self):
         super().__init__()
-        self.command_help = "send_msg <user_id> <message>: 发送消息到好友"
+        self.command_help = "send_msg: 发送消息到好友"
         self.command_name = "send_msg"
-        self.need_args = {
-            "user_id": {
-                "type": int,
-                "help": "要发送给的QQ用户ID",
-                "default": 0,
-                "must": True
-            },
-            "message": {
-                "type": str,
-                "help": "发送的消息内容",
-                "default": "",
-                "must": True
-            }
-        }
 
-    def run(self, input_command: CommandParsing, kwargs):
-        BotController.send_message(QQRichText.QQRichText(kwargs.get("message")), user_id=kwargs.get("user_id"))
+    def run(self, input_command: CommandParsing,kwargs):
+        try:
+            import tkinter
+            window = tkinter.Tk()
+            window.title("发送消息到用户")
+            window.geometry("300x120")
+            lbl = tkinter.Label(window, text="发送到用户",font=("Arial", 12))
+            lbl.grid(column=0, row=0)
+            lbl1 = tkinter.Label(window, text="发送内容",font=("Arial", 12))
+            lbl1.grid(column=0, row=2)
+            userID = tkinter.Entry(window, width=15,font=("Arial", 12))
+            userID.grid(column=1, row=0)
+            TexT = tkinter.Entry(window, width=15,font=("Arial", 12))
+            TexT.grid(column=1, row=2)
+            def clicked():
+                BotController.send_message(QQRichText.QQRichText(str(tkinter.Entry.get(TexT))), user_id=int(tkinter.Entry.get(userID)))
+                window.destroy()
+            btn = tkinter.Button(window, text="发送", command=clicked,font=("Arial", 12))
+            btn.grid(column=3, row=3)
+            window.mainloop()
+        except:
+            logger.error("弹出窗口异常")
+        
 
 
 class ExitCommand(Command):
@@ -160,40 +173,47 @@ class ExitCommand(Command):
         self.command_help = "RESTART: 退出程序"
         self.command_name = "RESTART"
 
-    def run(self, input_command: CommandParsing, **kwargs):
+    def run(self, input_command: CommandParsing, kwargs):
         logger.info("正在删除缓存")
         MuRainLib.clean_cache()
         logger.info("正在重启")
-        MuRainLib.reboot()
+        os.system("CLS")
+        MuRainLib.restart()
 
 
 
 class RunAPICommand(Command):
     def __init__(self):
         super().__init__()
-        self.command_help = "run_api <api_name:api节点> <api_params: api参数dict格式(可选)>: 运行API"
+        self.command_help = "run_api: 运行API"
         self.command_name = "run_api"
-        self.need_args = {
-            "api_name": {
-                "type": str,
-                "help": "要运行的API节点",
-                "default": "",
-                "must": True
-            },
-            "api_params": {
-                "type": dict,
-                "help": "API参数",
-                "default": {},
-                "must": False
-            }
-        }
         self.api = OnebotAPI.OnebotAPI(original=True)
 
     def run(self, input_command: CommandParsing, kwargs):
-        api_name = kwargs.get("api_name")
-        api_params = kwargs.get("api_params")
-        logger.debug(f"API: {api_name}, 参数: {api_params}")
-        print(self.api.get(api_name, api_params)[1].json())
+        try:
+            import tkinter
+            window = tkinter.Tk()
+            window.title("运行API")
+            window.geometry("300x120")
+            lbl = tkinter.Label(window, text="API节点",font=("Arial", 12))
+            lbl.grid(column=0, row=0)
+            lbl1 = tkinter.Label(window, text="参数（可选）",font=("Arial", 12))
+            lbl1.grid(column=0, row=2)
+            Point = tkinter.Entry(window, width=15,font=("Arial", 12))
+            Point.grid(column=1, row=0)
+            More = tkinter.Entry(window, width=15,font=("Arial", 12))
+            More.grid(column=1, row=2)
+            def clicked():        
+                api_name = tkinter.Entry.get(Point)
+                api_params = tkinter.Entry.get(More)
+                logger.debug(f"API: {api_name}, 参数: {api_params}")
+                print(self.api.get(api_name, api_params)[1].json())
+                window.destroy()
+            btn = tkinter.Button(window, text="运行", command=clicked,font=("Arial", 12))
+            btn.grid(column=3, row=3)
+            window.mainloop()
+        except:
+            logger.error("弹出窗口异常")
 
 
 class HelpCommand(Command):
@@ -271,7 +291,7 @@ def start_listening_command():
     while True:
         try:
             input_command = input()
-        except (KeyboardInterrupt, UnicodeDecodeError):
+        except (KeyboardInterrupt, UnicodeDecodeError,EOFError):
             MuRainLib.finalize_and_cleanup()
             return
 
