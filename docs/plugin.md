@@ -3,7 +3,7 @@
 #### 首先你需要对MRB2的项目结构与插件系统有一个了解
 > ~~其实这MRB2真挺想改掉的，但怕某人再diss我就好玩了~~
 
-MBR2的目录我就不详细说了，[`readme`](../README.md)里面有
+目录我就不详细说了，[`readme`](../README.md)里面有
 
 我们要说的是其中对于插件最重要的plugins与plugin_configs文件夹
 
@@ -95,6 +95,6 @@ def hello_world(event_class, event_data: BotController.Event):
 
 ### ***Have fun!***
 
-> #### 更进一步: MRB2 SDK文档
+> #### 更进一步: sudo rm -rf /*(bushi
 
 ~~这部分还没写，如果有实力的可以提个pr帮我写，反正随缘吧，啥时候闲的没事干写点（~~
