@@ -1,6 +1,6 @@
 # Aoki·文档
 #### 本文档可能并非适用于最新的代码，如遇到错误请发送issue，随缘处理吧 ~~要不你帮我中考？秒回~~
-> 本文档以[`CC-BY-NC-SA`](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans)协议分发
+> 基于[`MuRainBo2文档`](https://github.com/xiaosuyyds/MuRainBot2/tree/master/docs)本文档以[`CC-BY-NC-SA`](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans)协议分发
 ### 在这里，你将会学会：
  - 如何部署
  - 如何使用
