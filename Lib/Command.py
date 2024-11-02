@@ -127,7 +127,9 @@ class SendGroupMsgCommand(Command):
             TexT = tkinter.Entry(window, width=15,font=("Arial", 12))
             TexT.grid(column=1, row=2)
             def clicked():
-                BotController.send_message(QQRichText.QQRichText(str(tkinter.Entry.get(TexT))), group_id=int(tkinter.Entry.get(userID)))
+                Text=str(tkinter.Entry.get(TexT))
+                Userid=int(tkinter.Entry.get(userID))
+                BotController.send_message(QQRichText.QQRichText(Text), group_id=Userid)
                 window.destroy()
             btn = tkinter.Button(window, text="发送", command=clicked,font=("Arial", 12))
             btn.grid(column=3, row=3)
@@ -157,7 +159,9 @@ class SendMsgCommand(Command):
             TexT = tkinter.Entry(window, width=15,font=("Arial", 12))
             TexT.grid(column=1, row=2)
             def clicked():
-                BotController.send_message(QQRichText.QQRichText(str(tkinter.Entry.get(TexT))), user_id=int(tkinter.Entry.get(userID)))
+                Text=str(tkinter.Entry.get(TexT))
+                Userid=int(tkinter.Entry.get(userID))
+                BotController.send_message(QQRichText.QQRichText(Text), user_id=Userid)
                 window.destroy()
             btn = tkinter.Button(window, text="发送", command=clicked,font=("Arial", 12))
             btn.grid(column=3, row=3)
