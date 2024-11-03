@@ -1,4 +1,4 @@
-#Bot配置文件
+#配置文件
 account: # 账号相关
   user_id:   # QQ账号（留空则自动获取）
   nick_name: "" #昵称（留空则自动获取）
@@ -6,14 +6,19 @@ account: # 账号相关
 
 api: # Api设置
   host: '127.0.0.1'
-  port: 5840
+  port: 5800
 
 server: # 监听服务器设置
   host: '127.0.0.1'
-  port: 5841
+  port: 5801
+
+rc: # 远程连接设置
+  start: false #是否开放远程连接
+  host: '127.1.0.1'
+  port: 5001
 
 thread_pool: # 线程池最大线程数
-  max_workers: 10
+  max_workers: 5
 
 qq_data_cache: # QQ数据缓存设置
   enable: true # 是否启用缓存
