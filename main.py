@@ -4,6 +4,12 @@ import threading
 import Lib.ThreadPool
 from Lib import *
 import os
+import win32gui
+import win32console
+
+win = win32console.GetConsoleWindow()
+win32gui.ShowWindow(win, 0)
+time.sleep(3)
 
 BANNER = r"""
                 _    _ 
@@ -34,10 +40,43 @@ if not os.path.exists(data_path):
 if not os.path.exists(cache_path):
     os.makedirs(cache_path)
 
+def start_window():
+    try:
+        import tkinter as tk  
+        from PIL import Image, ImageTk
+        startwindow=tk.Tk()
+        startwindow.title('')
+        startwindow.resizable(False,False)
+        startwindow.overrideredirect(1)
 
+        w1=startwindow.winfo_screenwidth() #获取屏幕宽
+        h1=startwindow.winfo_screenheight() #获取屏幕高
+        w2=800  #指定当前窗体宽
+        h2=440  #指定当前窗体高
+        startwindow.geometry("%dx%d+%d+%d"%(w2,h2,(w1-w2)/2,(h1-h2)/2))
+
+        photo = tk.PhotoImage(file="Lib\\img\\start\\1.gif")
+        # 显示图像
+        label = tk.Label(startwindow, image=photo)
+        label.pack()
+
+        def autoClose():
+            time.sleep(5)
+            startwindow.destroy()
+
+        t=threading.Thread(target=autoClose)
+        t.start()
+
+        startwindow.mainloop()
+    except:
+        logger.error("启动窗口显示失败")
 
 # 主函数
 if __name__ == '__main__':
+    start_window()
+    os.system("CLS")
+    win32gui.ShowWindow(win, 1)
+    time.sleep(1)
     logger.info(f"当前版本：{VERSION}({VERSION_WEEK})")
     print(BANNER)
 
