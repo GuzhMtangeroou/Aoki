@@ -22,7 +22,7 @@ rc: # 远程连接设置
 
 #启动
 start_img:
-  show: true
+  show: true #其实吧，这启动图片能改，分辨率1024×614
 
 #其他
 thread_pool: # 线程池最大线程数
