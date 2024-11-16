@@ -34,11 +34,12 @@ def start_window():
     except:
         pass
 
-# 主函数
-if __name__ == '__main__':
-    if Configs.GlobalConfig().start_showpic == True:
-        time.sleep(1)
-        start_window()
-
     os.system("start cmd /k main.py")
-    sys.exit(0)
+    exit(0)
+
+if Configs.GlobalConfig().start_showpic == True:
+    time.sleep(1)
+    start_window()
+else:        
+    os.system("start cmd /k main.py")
+    exit(0)
