@@ -36,4 +36,3 @@ class LibInfo:
 
     def get_main_version(self):
         return self.main_version, self.main_version_week
-

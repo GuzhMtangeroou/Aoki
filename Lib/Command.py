@@ -174,8 +174,8 @@ class SendMsgCommand(Command):
 class ExitCommand(Command):
     def __init__(self):
         super().__init__()
-        self.command_help = "RESTART: 退出程序"
-        self.command_name = "RESTART"
+        self.command_help = "EXIT: 退出程序"
+        self.command_name = "EXIT"
 
     def run(self, input_command: CommandParsing, kwargs):
         logger.info("正在删除缓存")

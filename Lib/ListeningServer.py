@@ -252,7 +252,7 @@ def post_data():
             user = QQDataCacher.get_group_user_data(data.group_id, data.user_id)
             message = data.message.render(group_id=data.group_id)
 
-            logger.info("收到群聊%s(群名：%s)消息：%s(%s),来自用户 %s (群内昵称：%s)" % (
+            logger.info("收到群聊 %s(群号：%s)消息：%s(%s),来自用户 %s (QQ：%s)" % (
                 group.group_name, group.group_id, str(message),
                 data.message_id,user.get_group_name(), user.user_id))
 
@@ -260,8 +260,12 @@ def post_data():
             group_path = os.path.join(data_path, "groups", str(data.group_id))
             # 如果获取群文件夹路径不存在, 则创建
             if not os.path.exists(group_path):
-                control.new_here(data.group_id)
-                os.makedirs(group_path)
+                try:
+                    import plugins.Control as Control
+                    Control.new_here(data.group_id)
+                    os.makedirs(group_path)
+                except:
+                    logger.error("核心插件异常")
 
         else:
             logger.warning("收到未知上报: %s" % data.event_json)
@@ -277,15 +281,15 @@ def post_data():
             group = QQDataCacher.get_group_data(data.group_id)
             user = QQDataCacher.get_group_user_data(data.group_id, data.user_id)
             if data.sub_type == "invite":
-                logger.info("收到群聊%s(群名：%s)用户 %s (昵称：%s)的加群邀请" %
+                logger.info("收到群聊 %s(群号：%s)用户 %s (QQ：%s)的加群邀请" %
                             (group.group_id, group.group_name, user.user_id,user.get_group_name()))
             elif data.sub_type == "add":
                 if data.comment == "":
-                    logger.info("收到群聊%s(群名：%s)用户 %s (昵称：%s)的加群请求\n flag: %s" %
+                    logger.info("收到群聊 %s(群号：%s)用户 %s (QQ：%s)的加群请求\n flag: %s" %
                                 (group.group_id, group.group_name, user.user_id,user.get_group_name(), data.flag)
                                 )
                 else:
-                    logger.info("收到群聊%s(群名：%s)用户 %s (昵称：%s)的加群请求\n flag: %s" %
+                    logger.info("收到群聊 %s(群号：%s)用户 %s (QQ：%s)的加群请求\n flag: %s" %
                                 (group.group_id, group.group_name, user.user_id,user.get_group_name(), data.comment, data.flag)
                                 )
         else:
@@ -296,7 +300,7 @@ def post_data():
         if data.notice_type == "group_upload":
             group = QQDataCacher.get_group_data(data.group_id)
             user = QQDataCacher.get_group_user_data(data.group_id, data.user_id)
-            logger.info("群 %s(%s) 内 %s(群内昵称：%s) 上传了文件: %s" %
+            logger.info("群 %s(%s) 内 %s(QQ：%s) 上传了文件: %s" %
                         (group.group_name, group.group_id, user.get_group_name(), user.user_id, data.file))
 
         # 群管理员变动
@@ -348,7 +352,8 @@ def post_data():
                             (group.group_name, group.group_id, operator.get_group_name(),
                              operator.user_id, user.get_group_name(), user.user_id))
                 try:
-                    BotController.send_message(QQRichText.QQRichText({"type": "image","data":{"file": "https://static.codemao.cn/pickduck/BJjoUrRAA.jpg"}}),group_id=group.group_id)
+                    import plugins.Control as Control
+                    Control.send_welcome_message(group.group_id)
                 except:
                     logger.error("核心插件异常")
 
@@ -358,7 +363,7 @@ def post_data():
                              operator.user_id, user.get_group_name(), user.user_id))
                 try:
                     import plugins.Control as Control
-                    Control.send_welcome_message()
+                    Control.send_welcome_message(group.group_id)
                 except:
                     logger.error("核心插件异常")
 
