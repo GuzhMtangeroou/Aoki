@@ -103,18 +103,4 @@ Onebot实现端你自己启动吧，文档都有
 Bot运行命令为`python main.py`
 
 ### 至此，您已经成功安装并配置了Aoki，请尽情享用吧！
-
-## KittenServer
-### （本部分仅对`with-KittenServer`分支有效）
-
-### 背景
-周知所众，编程猫源码编辑器4有个叫“海龟函数”的积木盒<br>怎么说呢，就是依托海龟编辑器客户端的KittenServer组件建立本地http服务器（127.0.0.1:8964）连接作品，执行作品传入的函数并返回值。<br>
-![](https://cdn.nlark.com/yuque/0/2022/png/26472310/1647710682457-3a5a19bd-865d-483a-9d94-732b7e548497.png)
-<br>于是，某个阳光明媚的下午，我在海龟编辑器的文件里发现了KittenServer的代码（）
-<br>于是的于是，它就水灵灵地出现在这了（）
-
-### 使用
-在启动Bot同时启动`KittenServer.py`即可
-### 注意
-`KittenServer.py`需要与`main.py`在同一目录下
 > #### 更进一步: [了解如何自行编写插件](Writing_Plugins.md)
