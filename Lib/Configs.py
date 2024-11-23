@@ -70,6 +70,7 @@ class GlobalConfig(Config):
         self.rc_host_port = self.raw_config["rc"]["port"]
         self.rc_start = self.raw_config["rc"]["start"]
         self.start_showpic = self.raw_config["start_img"]["show"]
+        self.start_showcmd = self.raw_config["show_cmd"]["show"]
         self.max_workers = self.raw_config["thread_pool"]["max_workers"]
         self.qq_data_cache = self.raw_config["qq_data_cache"]["enable"]
         self.expire_time = self.raw_config["qq_data_cache"]["expire_time"]

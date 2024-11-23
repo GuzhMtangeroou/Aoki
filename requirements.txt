@@ -1,7 +1,8 @@
 coloredlogs=15.0.1
-requests=2.32.0
+requests=2.31.0
 PyYAML=6.0.1
 Flask=2.3.3
 Werkzeug=3.0.1
 psutil=6.0.0
 pandas=2.2.3
+win32gui==221.6
