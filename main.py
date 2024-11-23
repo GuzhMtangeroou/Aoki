@@ -1,10 +1,13 @@
 # coding:utf-8
-import atexit
 import threading
 import Lib.ThreadPool
 from Lib import *
-import os
-import win32gui
+import os,winreg,webbrowser,pystray
+from PIL import Image
+from pystray import MenuItem, Menu
+from ttkbootstrap.dialogs import Messagebox
+import win32gui,win32con
+
 
 BANNER = r"""
                 _    _ 
@@ -24,24 +27,26 @@ api = OnebotAPI.OnebotAPI()
 Lib.ThreadPool.init()
 request_list = []
 
-work_path = os.path.abspath(os.path.dirname(__file__))
-data_path = os.path.join(work_path, 'data')
-yaml_path = os.path.join(work_path, 'config.yml')
-cache_path = os.path.join(data_path, "cache")
-
 if not os.path.exists(data_path):
     os.makedirs(data_path)
 
 if not os.path.exists(cache_path):
     os.makedirs(cache_path)
 
+
 # 主函数
 if __name__ == '__main__':
-    os.system("CLS")
     logger.info(f"当前版本：{VERSION}({VERSION_WEEK})")
     print(BANNER)
-
     LibInfo.main_version, LibInfo.main_version_week = VERSION, VERSION_WEEK
+
+    if Configs.GlobalConfig().start_showcmd:
+        pass
+    else:
+        # 获取当前控制台窗口的句柄
+        console_window = win32gui.GetForegroundWindow()
+        # 隐藏控制台窗口
+        win32gui.ShowWindow(console_window, win32con.SW_HIDE)
 
     bot_uid = Configs.GlobalConfig().user_id
     bot_name = Configs.GlobalConfig().nick_name
@@ -101,3 +106,50 @@ if __name__ == '__main__':
         logger.error("监听服务器启动失败，报错信息：{}".format(repr(e)))
     finally:
         logger.info("监听服务器结束运行")
+
+
+def is_startup(name: str = "Aoki") -> bool:
+    try:
+        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Windows\CurrentVersion\Run",
+                             winreg.KEY_SET_VALUE, winreg.KEY_ALL_ACCESS | winreg.KEY_WRITE | winreg.KEY_CREATE_SUB_KEY)
+        value, _ = winreg.QueryValueEx(key, name)
+        return True
+    except:
+        return False
+
+
+def add_to_startup(name: str = "Aoki", file_path: str = "") -> None:
+    if file_path == "":
+        file_path = os.path.realpath(sys.argv[0])
+    key: winreg.HKEYType = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Windows\CurrentVersion\Run",
+                                          winreg.KEY_SET_VALUE,
+                                          winreg.KEY_ALL_ACCESS | winreg.KEY_WRITE | winreg.KEY_CREATE_SUB_KEY)  # By IvanHanloth
+    winreg.SetValueEx(key, name, 0, winreg.REG_SZ, '"' + file_path + '"')
+    winreg.CloseKey(key)
+    Messagebox.show_info("已成功添加开机自启", title="Aoki")
+
+def turn_to_github():
+    webbrowser.open("https://github.com/GuzhMtangeroou/Aoki")
+
+def exita():
+    import gc
+    gc.collect()
+    clean_cache()
+    os.system("taskkill /f /im python.exe /t")
+
+def baricon():
+    # 托盘菜单
+    menu: tuple = (
+        MenuItem('添加开机自启', lambda: add_to_startup()), 
+        MenuItem("Github", turn_to_github),
+        Menu.SEPARATOR, 
+        MenuItem('重启', lambda: restart()),
+        MenuItem('退出', lambda: exita())       
+        )
+
+    image: Image = Image.open("Lib\\img\\ico\\1.ico")
+
+    icon: pystray.Icon = pystray.Icon("name", title=f"Aoki-运行中\n版本{VERSION}（{VERSION_WEEK}）", icon=image, menu=menu) # type: ignore
+    icon.run()
+l=threading.Thread(target=baricon)
+l.start()
