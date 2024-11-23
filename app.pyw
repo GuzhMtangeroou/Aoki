@@ -26,6 +26,7 @@ def start_window():
         def autoClose():
             time.sleep(5)
             startwindow.destroy()
+            
 
         t=threading.Thread(target=autoClose)
         t.start()
@@ -35,11 +36,10 @@ def start_window():
         pass
 
     os.system("start cmd /k main.py")
-    exit(0)
+    os._exit(0)
 
 if Configs.GlobalConfig().start_showpic == True:
     time.sleep(1)
     start_window()
 else:        
-    os.system("start cmd /k main.py")
-    exit(0)
+    os._exit(0)
