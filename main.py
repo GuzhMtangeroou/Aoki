@@ -26,6 +26,7 @@ VERSION_WEEK = "2024#4"  # 版本周
 api = OnebotAPI.OnebotAPI()
 Lib.ThreadPool.init()
 request_list = []
+console_window = win32gui.GetForegroundWindow()
 
 if not os.path.exists(data_path):
     os.makedirs(data_path)
@@ -33,9 +34,48 @@ if not os.path.exists(data_path):
 if not os.path.exists(cache_path):
     os.makedirs(cache_path)
 
+def start_window():
+    if Configs.GlobalConfig().start_showpic == True:        
+        try:
+            win32gui.ShowWindow(console_window, win32con.SW_MINIMIZE)
+            time.sleep(1)
+            import tkinter as tk  
+            startwindow=tk.Tk()
+            startwindow.title('')
+            startwindow.resizable(False,False)
+            startwindow.overrideredirect(1)
+            startwindow.wm_attributes("-topmost", True)
+            w1=startwindow.winfo_screenwidth() #获取屏幕宽
+            h1=startwindow.winfo_screenheight() #获取屏幕高
+            w2=1024 #指定当前窗体宽
+            h2=614 #指定当前窗体高
+            startwindow.geometry("%dx%d+%d+%d"%(w2,h2,(w1-w2)/2,(h1-h2)/2))
+
+            photo = tk.PhotoImage(file="Lib\\img\\start\\1.gif")
+            # 显示图像
+            label = tk.Label(startwindow, image=photo)
+            label.pack()
+
+            def autoClose():
+                time.sleep(5)
+                startwindow.destroy()
+                
+
+            t=threading.Thread(target=autoClose)
+            t.start()
+
+            startwindow.mainloop()
+        except:
+            return -1
+        win32gui.ShowWindow(console_window, win32con.SW_NORMAL)
+        return 1
+    else:
+        return 0
 
 # 主函数
 if __name__ == '__main__':
+    if start_window() == -1:
+        logger.error("启动界面出现异常")
     logger.info(f"当前版本：{VERSION}({VERSION_WEEK})")
     print(BANNER)
     LibInfo.main_version, LibInfo.main_version_week = VERSION, VERSION_WEEK
@@ -43,8 +83,6 @@ if __name__ == '__main__':
     if Configs.GlobalConfig().start_showcmd:
         pass
     else:
-        # 获取当前控制台窗口的句柄
-        console_window = win32gui.GetForegroundWindow()
         # 隐藏控制台窗口
         win32gui.ShowWindow(console_window, win32con.SW_HIDE)
 
