@@ -19,8 +19,11 @@ import Lib.QQDataCacher as QQDataCacher
 import Lib.Command as Command
 import main
 
-VERSION = main.VERSION
-VERSION_WEEK = main.VERSION_WEEK
+# 扩展模块
+import Lib.Extra as Extra
+
+VERSION = "1.0"
+VERSION_WEEK = "24#4"
 
 
 # Lib信息

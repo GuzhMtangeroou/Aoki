@@ -78,25 +78,24 @@ def post_data():
         if data.message_type == "private":
             message = data.message.render()
             user = QQDataCacher.get_user_data(data.user_id,
-                                              data.user_id,
                                               data.sender.get("nickname"),
                                               data.sender.get("sex"),
                                               data.sender.get("age")
                                               )
             if data.sub_type == "friend":
-                logger.info("收到好友 %s(%s) 的消息: %s (%s)" % (
+                logger.info("收到好友 {}({}) 的消息: {} ({})".format(
                     user.nickname, user.user_id, message, data.message_id)
                             )
             elif data.sub_type == "group":
                 group = QQDataCacher.get_group_data(data.group_id)
-                logger.info("收到来自群 %s(%s) 内 %s(%s) 的临时会话消息: %s (%s)" % (
+                logger.info("收到来自群 {}({}) 内 {}({}) 的临时会话消息: {} ({})".format(
                     group.group_name, data.group_id,
                     user.nickname, user.user_id,
                     message, data.message_id
                 )
                             )
             elif data.sub_type == "other":
-                logger.info("收到来自 %s(%s) 的消息: %s (%s)" % (
+                logger.info("收到来自 {}({}) 的消息: {} ({})".format(
                     user.nickname, user.user_id, message, data.message_id)
                             )
 
@@ -106,9 +105,9 @@ def post_data():
             user = QQDataCacher.get_group_user_data(data.group_id, data.user_id)
             message = data.message.render(group_id=data.group_id)
 
-            logger.info("收到群聊 %s(群号：%s)消息：%s(%s),来自用户 %s (QQ：%s)" % (
-                group.group_name, group.group_id, str(message),
-                data.message_id,user.get_group_name(), user.user_id))
+            logger.info("收到群 {}({}) 内 {}({}) 的消息: {} ({})".format(
+                group.group_name, group.group_id, user.get_group_name(), user.user_id, message,
+                data.message_id))
 
             # 获取群文件夹路径
             group_path = os.path.join(data_path, "groups", str(data.group_id))

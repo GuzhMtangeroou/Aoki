@@ -19,7 +19,7 @@ def get_help_text():
         try:
             plugin_info = plugin["plugin"].PluginInfo()
             if plugin_info.DESCRIPTION and plugin_info.IS_HIDDEN is False:
-                text += "\n{}：{}".format(plugin_info.NAME, plugin_info.HELP_MSG)
+                text += f"\n{plugin_info.NAME} - {plugin_info.DESCRIPTION}"
         # except Exception as e:
         except:
             # print(repr(e))

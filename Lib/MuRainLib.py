@@ -1,3 +1,7 @@
+"""
+MuRainLib
+用于MuRain Bot框架
+"""
 import atexit
 import hashlib
 import logging
