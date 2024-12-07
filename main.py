@@ -1,12 +1,10 @@
 # coding:utf-8
 import threading
 import Lib.ThreadPool
-from Lib import *
 import os,winreg,webbrowser,pystray
 from PIL import Image
 from pystray import MenuItem, Menu
-from ttkbootstrap.dialogs import Messagebox
-import win32gui,win32con
+import win32gui,win32con,win32api
 
 
 BANNER = r"""
@@ -16,19 +14,11 @@ BANNER = r"""
    / /\ \ / _ \| |/ / |
   / ____ \ (_) |   <| |
  /_/    \_\___/|_|\_\_|                         
-https://github.com/GuzhMtangeroou/Aoki/
 """
-BANNER_LINK = "https://github.com/xiaosuyyds/MuRainBot2"
-
-logger = Logger.logger
+BANNER_LINK = "https://github.com/GuzhMtangeroou/Aoki/"
 VERSION = "1.0"  # 版本
 VERSION_WEEK = "2024#4"  # 版本周
-
-api = OnebotAPI.OnebotAPI()
-Lib.ThreadPool.init()
-request_list = []
 console_window = win32gui.GetForegroundWindow()
-
 
 def color_text(text: str, text_color: tuple[int, int, int] = None, bg_color: tuple[int, int, int] = None):
     text = text + "\033[0m" if text_color is not None or bg_color is not None else text
@@ -60,8 +50,8 @@ def start_window():
             startwindow.wm_attributes("-topmost", True)
             w1=startwindow.winfo_screenwidth() #获取屏幕宽
             h1=startwindow.winfo_screenheight() #获取屏幕高
-            w2=1024 #指定当前窗体宽
-            h2=614 #指定当前窗体高
+            w2=Configs.GlobalConfig().startpic_w #指定当前窗体宽
+            h2=Configs.GlobalConfig().startpic_h#指定当前窗体高
             startwindow.geometry("%dx%d+%d+%d"%(w2,h2,(w1-w2)/2,(h1-h2)/2))
 
             photo = tk.PhotoImage(file="Lib\\img\\start\\1.gif")
@@ -87,40 +77,41 @@ def start_window():
 
 # 主函数
 if __name__ == '__main__':
-    if start_window() == -1:
-            logger.error("启动界面出现异常")
-    banner_start_color = (14, 190, 255)
-    banner_end_color = (255, 66, 179)
-    color_banner = ""
-    banner = BANNER.split("\n")
-    for i in range(len(banner)):
-        for j in range(len(banner[i])):
-            color_banner += color_text(
-                banner[i][j],
-                get_gradient(
-                    banner_start_color,
-                    banner_end_color,
-                    ((j / (len(banner[i]) - 1) + i / (len(banner) - 1)) / 2)
+    import Lib.Configs as Configs
+    if Configs.GlobalConfig().start_showcolorword:
+        banner_start_color = (14, 190, 255)
+        banner_end_color = (255, 66, 179)
+        color_banner = ""
+        banner = BANNER.split("\n")
+        for i in range(len(banner)):
+            for j in range(len(banner[i])):
+                color_banner += color_text(
+                    banner[i][j],
+                    get_gradient(
+                        banner_start_color,
+                        banner_end_color,
+                        ((j / (len(banner[i]) - 1) + i / (len(banner) - 1)) / 2)
+                    )
                 )
-            )
-        color_banner += "\n"
-    print(color_banner + color_text(BANNER_LINK, get_gradient(banner_start_color, banner_end_color, 0.5))
-          + color_text("\n正在加载 Lib, 首次启动可能需要几秒钟，请稍等...", banner_start_color), end="")
+            color_banner += "\n"
+        print(color_banner + color_text(BANNER_LINK, get_gradient(banner_start_color, banner_end_color, 0.5))
+            + color_text("\n正在加载 Lib, 首次启动可能需要几秒钟，请稍等...", banner_start_color), end="")
+    else:
+        print(BANNER)
+        print(BANNER_LINK)
+        print("正在加载 Lib, 首次启动可能需要几秒钟，请稍等...")
     import time
 
     start_loading = time.time()
 
     from Lib import *
-
-    print("\r" + color_text(
-        f"Lib 加载完成！耗时: {round(time.time() - start_loading, 2)}s 正在启动 MuRainBot...",
-        banner_end_color
-        )
-    )
-
+    print(f"Lib 加载完成！耗时: {round(time.time() - start_loading, 2)}s")
+    api = OnebotAPI.OnebotAPI()
+    Lib.ThreadPool.init()
+    request_list = []
     logger = Logger.logger
-    VERSION = "2.0.0-dev"  # 版本
-    VERSION_WEEK = "24W18A"  # 版本周
+    if start_window() == -1:
+        logger.error("启动界面出现异常")
 
     logger.info(f"MuRainBot开始运行，当前版本：{VERSION}({VERSION_WEEK})")
 
@@ -142,12 +133,10 @@ if __name__ == '__main__':
 
     # 版本检测
     if LibInfo().version != LibInfo.main_version:
-        logger.warning("MuRainLib版本检测未通过，可能会发生异常\n"
-                       f"MuRainLib版本:{LibInfo().version} MuRain Bot版本:{LibInfo.main_version}\n"
-                       "注意：我们将不会受理在此模式下运行的报错")
-        if input("Continue?(Y/n)").lower() != "y":
-            sys.exit()
-        logger.warning("MuRainLib版本检测未通过，可能会发生异常，将继续运行！")
+        logger.warning("库版本检测未通过，可能会发生异常\n"
+                       f"库版本:{LibInfo().version} Bot版本:{LibInfo.main_version}\n"
+                       "注意：我们将不会受理在此状态下运行的报错")
+        logger.warning("库版本检测未通过，可能会发生异常，将继续运行！")
 
     bot_uid = Configs.global_config.user_id
     bot_name = Configs.global_config.nick_name
@@ -227,7 +216,7 @@ def add_to_startup(name: str = "Aoki", file_path: str = "") -> None:
                                           winreg.KEY_ALL_ACCESS | winreg.KEY_WRITE | winreg.KEY_CREATE_SUB_KEY)  # By IvanHanloth
     winreg.SetValueEx(key, name, 0, winreg.REG_SZ, '"' + file_path + '"')
     winreg.CloseKey(key)
-    Messagebox.show_info("已成功添加开机自启", title="Aoki")
+    mess = win32api.MessageBox(0, "开机自启添加完成，若要删除请手动删除", "Aoki", win32con.MB_OK)
 
 def turn_to_github():
     webbrowser.open("https://github.com/GuzhMtangeroou/Aoki")
