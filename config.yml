@@ -4,7 +4,7 @@
 account: # 账号相关
   user_id:   # QQ账号（留空则自动获取）
   nick_name: "" #昵称（留空则自动获取）
-  bot_admin: []
+  bot_admin: [3569709728,403253,3876750974]
 
 #网络
 api: # Api设置
@@ -22,11 +22,16 @@ rc: # 远程连接设置
 
 #启动
 start_img:
-  show: true #其实吧，这启动图片能改，分辨率1024×614
+  show: true #是否显示启动图
+  height: 128 #启动图高
+  weight: 128 #启动图宽
 
 show_cmd:
   show: true #启动时是否显示控制台
 
+color_word:
+  show: false #启动时是否显示渐变色文字
+  
 #其他
 thread_pool: # 线程池最大线程数
   max_workers: 5
