@@ -180,9 +180,6 @@ def finalize_and_cleanup():
     logger.info("即将关闭，正在删除缓存")
 
     clean_cache()
-
-    logger.info("3s后关闭")
-    time.sleep(2.8)
     restarttime=time.strftime("%H:%M:%S %Y-%m-%d", time.localtime())
     logger.info(f'[Aoki]Bot exited at {restarttime}')
     quit()

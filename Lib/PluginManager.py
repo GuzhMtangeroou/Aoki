@@ -4,6 +4,8 @@ import time
 import Lib.Logger as Logger
 import threading
 import Lib.ThreadPool as ThreadPool
+import hashlib
+import struct
 
 logger = Logger.logger
 
@@ -59,7 +61,27 @@ class PluginInfo:
         self.HELP_MSG = ""  # 插件帮助
         # TODO: self.ENABLED = True  # 插件是否启用
         self.IS_HIDDEN = False  # 插件是否隐藏（在/help命令中）
+        self.UID = ""
 
+def extract_seed(identifier):
+    # Remove dashes from the identifier
+    clean_hex = identifier.replace('-', '')
+    
+    # Extract the first 4 characters which represent the seed in hexadecimal
+    seed_hex = clean_hex[:4]
+    
+    # Convert the hexadecimal back to an integer
+    seed_int = struct.unpack('>H', bytes.fromhex(seed_hex))[0]
+    return seed_int
+
+
+def on_extract(entry:str):
+    try:
+        identifier = entry.strip()
+        seed = extract_seed(identifier)
+        return seed
+    except Exception as e:
+        return -1
 
 @ThreadPool.async_task
 def run_plugin_main(data):

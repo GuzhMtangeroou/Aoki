@@ -1,5 +1,6 @@
 # coding:utf-8
 import threading
+import Lib.MuRainLib
 import Lib.ThreadPool
 import os,winreg,webbrowser,pystray
 from PIL import Image
@@ -18,6 +19,7 @@ BANNER = r"""
 BANNER_LINK = "https://github.com/GuzhMtangeroou/Aoki/"
 VERSION = "1.0"  # 版本
 VERSION_WEEK = "2024#4"  # 版本周
+CHECK_CODE = 2404
 console_window = win32gui.GetForegroundWindow()
 
 def color_text(text: str, text_color: tuple[int, int, int] = None, bg_color: tuple[int, int, int] = None):
@@ -95,17 +97,14 @@ if __name__ == '__main__':
                 )
             color_banner += "\n"
         print(color_banner + color_text(BANNER_LINK, get_gradient(banner_start_color, banner_end_color, 0.5))
-            + color_text("\n正在加载 Lib, 首次启动可能需要几秒钟，请稍等...", banner_start_color), end="")
+            + color_text("\n正在加载 Lib...", banner_start_color), end="")
     else:
         print(BANNER)
         print(BANNER_LINK)
-        print("正在加载 Lib, 首次启动可能需要几秒钟，请稍等...")
-    import time
-
-    start_loading = time.time()
+        print("正在加载 Lib...")
 
     from Lib import *
-    print(f"Lib 加载完成！耗时: {round(time.time() - start_loading, 2)}s")
+    print(f"Lib 加载完成")
     api = OnebotAPI.OnebotAPI()
     Lib.ThreadPool.init()
     request_list = []
@@ -113,7 +112,7 @@ if __name__ == '__main__':
     if start_window() == -1:
         logger.error("启动界面出现异常")
 
-    logger.info(f"MuRainBot开始运行，当前版本：{VERSION}({VERSION_WEEK})")
+    logger.info(f"开始运行，当前版本：{VERSION}({VERSION_WEEK})")
 
     api = OnebotAPI.OnebotAPI()
     ThreadPool.init()
@@ -133,10 +132,9 @@ if __name__ == '__main__':
 
     # 版本检测
     if LibInfo().version != LibInfo.main_version:
-        logger.warning("库版本检测未通过，可能会发生异常\n"
+        logger.warning("库版本不是最新，可能会发生异常\n"
                        f"库版本:{LibInfo().version} Bot版本:{LibInfo.main_version}\n"
                        "注意：我们将不会受理在此状态下运行的报错")
-        logger.warning("库版本检测未通过，可能会发生异常，将继续运行！")
 
     bot_uid = Configs.global_config.user_id
     bot_name = Configs.global_config.nick_name
@@ -148,7 +146,16 @@ if __name__ == '__main__':
         for plugin in PluginManager.plugins:
             try:
                 plugin_info = plugin["plugin"].PluginInfo()
-                logger.info(" - {}: {} 作者:{}".format(plugin["name"], plugin_info.NAME, plugin_info.AUTHOR))
+                if plugin_info.UID == "":
+                    logger.warning("插件{} UID获取失败".format(plugin["name"]))
+                else:
+                    sed=Lib.PluginManager.on_extract(plugin_info.UID)
+                    if sed >= CHECK_CODE:
+                        logger.info(" - {}: {}  by {},UID:{}".format(plugin["name"], plugin_info.NAME, plugin_info.AUTHOR,plugin_info.UID))
+                    elif sed < CHECK_CODE:
+                        logger.info("插件{} 适配于较旧的Bot版本，请及时维护".format(plugin["name"]))
+                    else:
+                        logger.info("插件{} 校验失败".format(plugin["name"]))
             except ArithmeticError:
                 logger.warning("插件{} 没有信息".format(plugin["name"]))
             except Exception as e:
@@ -156,15 +163,15 @@ if __name__ == '__main__':
     else:
         logger.warning("无插件成功导入！")
 
-    logger.info("读取到监听服务器ip，将以此ip启动监听服务器: {}:{}"
+    logger.info("将以{}:{}启动监听服务器"
                 .format(Configs.global_config.server_host, Configs.global_config.server_port))
 
-    logger.info("读取到监听api，将以此url调用API: {}"
+    logger.info("将以{}调用API"
                 .format(str(api)))
 
     # 检测bot名称与botUID是否为空或未设置
     if bot_uid is None or bot_name == "" or bot_uid == 123456 or bot_name is None:
-        logger.info("配置文件中未找到BotUID或昵称，正在自动获取")
+        logger.info("BotUID或昵称来源：自动获取......")
 
         bot_info = api.get_login_info()
         if not isinstance(bot_info, dict):
@@ -175,9 +182,9 @@ if __name__ == '__main__':
             raw_config["account"]["user_id"] = bot_uid
             raw_config["account"]["nick_name"] = bot_name
             Configs.global_config.write_cache(raw_config)
-            logger.debug("已成功获取BotUID与昵称！")
+            logger.debug("BotUID与昵称来源：自动获取")
         else:
-            logger.error(f"获取BotUID与昵称失败，字段缺失，可能会导致严重问题。{bot_info}")
+            logger.error(f"获取BotUID与昵称失败，可能会导致严重问题{bot_info}")
 
     logger.info(f"欢迎使用 {Configs.global_config.nick_name}({Configs.global_config.user_id})")
 
@@ -193,7 +200,7 @@ if __name__ == '__main__':
         logger.info("启动监听服务器")
         ListeningServer.server.serve_forever()
     except Exception as e:
-        logger.error(f"监听服务器启动失败！报错信息：{repr(e)}")
+        logger.error(f"监听服务器启动失败：{repr(e)}")
     finally:
         logger.info("监听服务器结束运行")
 
@@ -218,28 +225,24 @@ def add_to_startup(name: str = "Aoki", file_path: str = "") -> None:
     winreg.CloseKey(key)
     mess = win32api.MessageBox(0, "开机自启添加完成，若要删除请手动删除", "Aoki", win32con.MB_OK)
 
-def turn_to_github():
-    webbrowser.open("https://github.com/GuzhMtangeroou/Aoki")
-
 def exita():
     import gc
     gc.collect()
-    clean_cache()
+    Lib.MuRainLib.clean_cache()
     os.system("taskkill /f /im python.exe /t")
 
 def baricon():
     # 托盘菜单
     menu: tuple = (
         MenuItem('添加开机自启', lambda: add_to_startup()), 
-        MenuItem("Github", turn_to_github),
         Menu.SEPARATOR, 
-        MenuItem('重启', lambda: restart()),
+        MenuItem('重启', lambda: Lib.MuRainLib.restart()),
         MenuItem('退出', lambda: exita())       
         )
 
     image: Image = Image.open("Lib\\img\\ico\\1.ico")
 
-    icon: pystray.Icon = pystray.Icon("name", title=f"Aoki-运行中\n版本{VERSION}（{VERSION_WEEK}）", icon=image, menu=menu) # type: ignore
+    icon: pystray.Icon = pystray.Icon("name", title=f"Aoki-运行中\n当前账号： {Lib.Configs.global_config.nick_name}({Lib.Configs.global_config.user_id})\n版本{VERSION}（{VERSION_WEEK}）\n库版本：{Lib.VERSION}（{Lib.VERSION_WEEK}）", icon=image, menu=menu) # type: ignore
     icon.run()
 l=threading.Thread(target=baricon)
 l.start()
