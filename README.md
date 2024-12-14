@@ -62,6 +62,8 @@
 │   ├─ xxx.yml  xxx插件的配置文件
 │   ├─ yyy.yml  yyy插件的配置文件
 │   ...
+├─ tools  用于开发的小工具
+│   ...
 ├─ config.yml   配置文件
 ├─ main.py      主程序（运行这个直接启动）
 ├─ app.pyw      带启动界面的主程序（运行这个也可启动）
