@@ -9,7 +9,9 @@ class PluginInfo(PluginManager.PluginInfo):
         self.AUTHOR = "你说是校溯还是vika"  # 插件作者
         self.VERSION = "1.0"  # 插件版本
         self.DESCRIPTION = "帮助插件"  # 插件描述
-        self.HELP_MSG = "发送“*help”或“*帮助”查看帮助"  # 插件帮助
+        self.HELP_MSG = "发送“*help”或“*帮助”查看帮助"
+        self.IS_HIDDEN = False
+        self.UID = "0964-fcdb-4b423f4e-52836a51-ef7d-ba1d"  # 插件帮助
 
 
 def get_help_text():

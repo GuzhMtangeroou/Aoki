@@ -10,7 +10,9 @@ class PluginInfo:
         self.AUTHOR = "You"  # 插件作者
         self.VERSION = "1.0.0"  # 插件版本
         self.DESCRIPTION = "一个发送HelloWorld的插件"  # 插件描述
-        self.HELP_MSG = ""  # 插件帮助
+        self.HELP_MSG = ""
+        self.IS_HIDDEN = False
+        self.UID = "0964-fcdb-4b423f4e-52836a51-ef7d-ba1d"  # 插件UID
 
 
 # 写法1: 注册关键词

@@ -7,7 +7,7 @@
 
 我们要说的是其中对于插件最重要的plugins与plugin_configs文件夹
 
- - `plugins`文件夹是用来存放插件的，里面需要防插件的源码
+ - `plugins`文件夹是用来存放插件的，里面需要放插件的源码
  - `plugin_configs`文件夹是用来存放插件的配置文件，里面需要有插件的配置文件
 
 ---
@@ -31,6 +31,7 @@
 ---
 
 > 好的，现在你对插件系统与事件系统有了个基本的了解，接下来就让我们开始正式的写你的第一个插件吧！
+~~其实我们送了一些插件可以白嫖（api来源：https://api.aa1.cn/）~~
 > 
 > 这个插件需要实现在私聊与群聊中发送hello自动回复Hello World!
 
@@ -52,6 +53,7 @@ class PluginInfo:
         self.DESCRIPTION = "自动回复HelloWorld的插件"  # 插件描述
         self.HELP_MSG = ""  # 插件帮助
         self.IS_HIDDEN = False  # 插件是否隐藏（在/help命令中）
+        self.UID = "（用tools/uid_maker.py生成一个）"
 ```
 
 现在我们运行main.py，可以从日志种看见框架已经正确识别了你的插件

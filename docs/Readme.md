@@ -24,22 +24,25 @@
 ~~什么？你又问这个命令为什么运行不了？请检查你是否已经安装好了Python，以及你是否正确设置了环境变量，以及你是否已经将cmd/PowerShell切换到项目文件夹下~~
 4. 运行 `python main.py`
 > 很棒，你肯定已经成功运行了，那么此时你应该在终端内发现了几条log和一个ERROR提示，不要担心，这是正常情况，接下来我们来解决它~
-**附：正常启动的log**
+**附：~~（可能是）~~正常启动的log**
 ```text
-[2024-10-06 12:26:06] [main.py] [INFO]: 当前版本：x.x(20xx#x)
-[2024-10-06 12:26:06] [main.py] [INFO]: Github：https://github.com/GuzhMtangeroou/Aoki/
-[2024-10-06 12:26:06] [main.py] [INFO]: 插件导入完成，共导入 4 个插件:
-[2024-10-06 12:26:06] [main.py] [INFO]:  - About: About 作者:？
-[2024-10-06 12:26:06] [main.py] [INFO]:  - Control: CTRL 作者:vika
-[2024-10-06 12:26:06] [main.py] [INFO]:  - Helper: Helper 作者:你说是校溯还是vika
-[2024-10-06 12:26:06] [main.py] [INFO]:  - pluginTemplates: HelloWorld 作者:You
-[2024-10-06 12:26:06] [main.py] [INFO]: 读取到监听服务器ip，将以此ip启动监听服务器: 127.0.0.1:5841
-[2024-10-06 12:26:06] [main.py] [INFO]: 读取到监听api，将以此url调用API: http://127.0.0.1:5840
-[2024-10-06 12:26:06] [main.py] [INFO]: 配置文件中未找到BotUID或昵称，正在自动获取
-[2024-10-06 12:26:08] [main.py] [ERROR]: 获取BotUID与昵称失败，可能会导致严重问题(ConnectionError(MaxRetryError("HTTPConnectionPool(host='127.0.0.1', port=5840): Max retries exceeded with url: /get_login_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023096796490>: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。'))")))
-[2024-10-06 12:26:08] [main.py] [INFO]: 登录用户： (None)
-[2024-10-06 12:26:08] [main.py] [INFO]: 开启命令输入
-[2024-10-06 12:26:08] [main.py] [INFO]: 启动监听服务器
+[2024-12-14 20:03:11,348] [main.py] [INFO]: 开始运行，当前版本：1.0(24#4)
+[2024-12-14 20:03:11,856] [main.py] [INFO]: 插件导入完成，共成功导入 4 个插件:
+[2024-12-14 20:03:11,857] [main.py] [INFO]: 插件导入完成，共导入 4 个插件:
+[2024-12-14 20:03:11,857] [main.py] [INFO]:  - About: About by ？,UID:0964-fcdb-4b423f4e-52836a51-ef7d-ba1d
+[2024-12-14 20:03:11,857] [main.py] [INFO]:  - Control: CTRL by vika,UID:0964-fcdb-4b423f4e-52836a51-ef7d-ba1d
+[2024-12-14 20:03:11,857] [main.py] [INFO]:  - Helper: Helper by 你说是校溯还是vika,UID:0964-fcdb-4b423f4e-52836a51-ef7d-ba1d
+[2024-12-14 20:03:11,857] [main.py] [INFO]:  - pluginTemplates: HelloWorld by You,UID:0964-fcdb-4b423f4e-52836a51-ef7d-ba1d
+[2024-12-14 20:03:11,857] [main.py] [INFO]:  - Manager: Manager  by ？,UID:0964-fcdb-4b423f4e-52836a51-ef7d-ba1d
+[2024-12-14 20:03:11,858] [main.py] [INFO]:  - Play: Play  by vika,UID:0964-fcdb-4b423f4e-52836a51-ef7d-ba1d
+[2024-12-14 20:03:11,859] [main.py] [INFO]: 将以127.0.0.1:5801启动监听服务器
+[2024-12-14 20:03:11,859] [main.py] [INFO]: 将以http://127.0.0.1:5800调用API
+[2024-12-14 20:03:11,859] [main.py] [INFO]: BotUID或昵称来源：自动获取......
+[2024-12-14 20:03:13,893] [OnebotAPI.py] [ERROR]: 调用 API: /get_login_info data: None 异常: ConnectionError(MaxRetryError("HTTPConnectionPool(host='127.0.0.1', port=5800): Max retries exceeded with url: /get_login_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002445693BCD0>: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。'))"))
+[2024-12-14 20:03:13,894] [main.py] [ERROR]: 获取BotUID与昵称失败，可能会导致严重问题(ConnectionError(MaxRetryError("HTTPConnectionPool(host='127.0.0.1', port=5800): Max retries exceeded with url: /get_login_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002445693BCD0>: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。'))")))
+[2024-12-14 20:03:13,895] [main.py] [INFO]: 欢迎使用 (None)
+[2024-12-14 20:03:13,896] [main.py] [INFO]: 开启命令输入
+[2024-12-14 20:03:13,896] [main.py] [INFO]: 启动监听服务器
 ```
 ---
 ### 安装Onebot实现端
@@ -53,9 +56,9 @@
 - [~~go-cqhttp~~](https://github.com/Mrs4s/go-cqhttp)
 #### 以上这些项目基本上均有详细的安装文档，请自行查看，在此我们使用Lagrange.Onebot进行示范
 有两种方法，1.使用sb.(somebody)写的小工具全自动安装(😀📕📕针👍)，2.手动安装
-> 使用作者写的小工具自动安装
+> 使用😀📕📕写的小工具自动安装
 
-首先打开作者写的小工具的项目[Lagrange.Installer](https://github.com/xiaosuyyds/Lagrange.Installer)
+首先打开😀📕📕写的小工具的项目[Lagrange.Installer](https://github.com/xiaosuyyds/Lagrange.Installer)
 
 然后下载[releases](https://github.com/xiaosuyyds/Lagrange.Installer/releases)内的最新版本
 

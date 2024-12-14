@@ -14,6 +14,8 @@ class PluginInfo(PluginManager.PluginInfo):
         self.VERSION = "1.0"  # 插件版本
         self.DESCRIPTION = "关于"  # 插件描述
         self.HELP_MSG = "发送“*about”或“*关于”即可查看Bot信息"  # 插件帮助
+        self.IS_HIDDEN = False
+        self.UID = "0964-fcdb-4b423f4e-52836a51-ef7d-ba1d"
 
 def get_about(event_class, event_data: BotController.Event):
     if event_data.message_type == "private":  # 判断是群聊事件还是私聊事件

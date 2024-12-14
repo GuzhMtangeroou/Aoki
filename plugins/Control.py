@@ -12,7 +12,9 @@ class PluginInfo(PluginManager.PluginInfo):
         self.NAME = "CTRL"  # 插件名称
         self.AUTHOR = "vika"  # 插件作者
         self.VERSION = "1.0.0"  # 插件版本
-        self.DESCRIPTION = "控制功能"  # 插件描述
+        self.DESCRIPTION = "控制功能"
+        self.IS_HIDDEN = False
+        self.UID = "0964-fcdb-4b423f4e-52836a51-ef7d-ba1d"  # 插件描述
 
 
 
