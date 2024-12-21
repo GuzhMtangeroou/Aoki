@@ -90,9 +90,58 @@
 ---
 > 恭喜你，你已经成功安装Onebot实现端，接下来我们开始配置Bot吧！
 
-首先打开配置文件(`config.yml`)
+首先运行(`main.py`)，欸，配置文件有点抽象怎么办？~~其实注释在这（）~~
+```text
+#配置文件
 
-让我来为您一一介绍……个鬼啊！`config.yml`注释都这么完善了，相信你看得懂！
+#账号
+account: # 账号相关
+  user_id:   # QQ账号（留空则自动获取）
+  nick_name: "" #昵称（留空则自动获取）
+  bot_admin: []
+
+#网络
+api: # Api设置
+  host: '127.0.0.1'
+  port: 5800
+
+server: # 监听服务器设置
+  host: '127.0.0.1'
+  port: 5801
+
+rc: # 远程连接设置
+  start: false #是否开放远程连接
+  host: '127.1.0.1'
+  port: 5001
+
+#启动
+start_img:
+  show: true #是否显示启动图
+  height: 128 #启动图高
+  weight: 128 #启动图宽
+
+show_cmd:
+  show: true #启动时是否显示控制台
+
+color_word:
+  show: false #启动时是否显示渐变色文字
+  
+#其他
+thread_pool: # 线程池最大线程数
+  max_workers: 5
+
+qq_data_cache: # QQ数据缓存设置
+  enable: true # 是否启用缓存
+  expire_time: 300  # 缓存过期时间（秒）
+  max_cache_size: 500  # 最大缓存数量（设置过大可能会导致报错）
+
+
+debug: # 调试模式
+  enable: false # 是否启用调试模式
+
+auto_restart_onebot: # 在Onebot实现端状态异常时自动重启Onebot实现端（需开启心跳包）
+  enable: true # 是否启用自动重启
+```
 
 您只需要在account.bot_admin中添加您自己的QQ号即可，其余的配置项暂时可以不用管他
 
