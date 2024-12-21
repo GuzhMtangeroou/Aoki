@@ -4,7 +4,7 @@
 account: # 账号相关
   user_id:   # QQ账号（留空则自动获取）
   nick_name: "" #昵称（留空则自动获取）
-  bot_admin: [3569709728,403253,3876750974]
+  bot_admin: []
 
 #网络
 api: # Api设置
