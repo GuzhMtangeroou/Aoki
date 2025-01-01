@@ -35,7 +35,7 @@ def generate_identifier(seed, additional_string):
 def on_generate():
     try:
         additional_string = entry_additional_string.get().strip()
-        seed = 2404  # Fixed seed value
+        seed = 2501  # Fixed seed value
         identifier = generate_identifier(seed, additional_string)
         label_result.config(text=f"Generated Identifier: {identifier}")
         button_copy.config(state=tk.NORMAL)
@@ -75,6 +75,3 @@ button_copy.grid(row=2, columnspan=3, padx=10, pady=5)
 
 # Start the GUI event loop
 root.mainloop()
-
-
-

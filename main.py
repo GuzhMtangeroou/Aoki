@@ -2,11 +2,12 @@
 import threading
 import Lib.MuRainLib
 import Lib.ThreadPool
+import Lib.GUILib
 import os,winreg,webbrowser,pystray
 from PIL import Image
 from pystray import MenuItem, Menu
 import win32gui,win32con,win32api
-
+from windows_toasts import Toast, WindowsToaster
 
 BANNER = r"""
                 _    _ 
@@ -18,8 +19,8 @@ BANNER = r"""
 """
 BANNER_LINK = "https://github.com/GuzhMtangeroou/Aoki/"
 VERSION = "1.0"  # 版本
-VERSION_WEEK = "2024#4"  # 版本周
-CHECK_CODE = 2404
+VERSION_WEEK = "2025#1"  # 版本周
+CHECK_CODE = 2501
 console_window = win32gui.GetForegroundWindow()
 
 def color_text(text: str, text_color: tuple[int, int, int] = None, bg_color: tuple[int, int, int] = None):
@@ -176,6 +177,11 @@ if __name__ == '__main__':
         bot_info = api.get_login_info()
         if not isinstance(bot_info, dict):
             logger.error(f"获取BotUID与昵称失败，可能会导致严重问题({repr(bot_info)})")
+            toaster = WindowsToaster('Python')
+            newToast = Toast()
+            newToast.text_fields = [f"获取BotUID与昵称失败，可能会导致严重问题：{repr(bot_info)}"]
+            newToast.on_activated = lambda _: win32api.MessageBox(0, f"获取BotUID与昵称失败，可能会导致严重问题：{repr(bot_info)}", "Aoki", win32con.MB_ICONERROR)
+            toaster.show_toast(newToast)    
         elif "user_id" in bot_info and "nickname" in bot_info:
             bot_uid, bot_name = bot_info["user_id"], bot_info["nickname"]
             raw_config = Configs.global_config.raw_config
@@ -185,11 +191,17 @@ if __name__ == '__main__':
             logger.debug("BotUID与昵称来源：自动获取")
         else:
             logger.error(f"获取BotUID与昵称失败，可能会导致严重问题{bot_info}")
+            toaster = WindowsToaster('Python')
+            newToast = Toast()
+            newToast.text_fields = [f"获取BotUID与昵称失败，可能会导致严重问题：{repr(bot_info)}"]
+            newToast.on_activated = lambda _: win32api.MessageBox(0, f"获取BotUID与昵称失败，可能会导致严重问题：{repr(bot_info)}", "Aoki", win32con.MB_ICONERROR)
+            toaster.show_toast(newToast) 
 
     logger.info(f"欢迎使用 {Configs.global_config.nick_name}({Configs.global_config.user_id})")
 
     Command.start_command_listener()
     logger.info("开启命令输入")
+    logininfo=BotController.api.get_login_info()
 
     # 禁用werkzeug的日志记录
     log = logging.getLogger('werkzeug')
@@ -201,6 +213,11 @@ if __name__ == '__main__':
         ListeningServer.server.serve_forever()
     except Exception as e:
         logger.error(f"监听服务器启动失败：{repr(e)}")
+        toaster = WindowsToaster('Python')
+        newToast = Toast()
+        newToast.text_fields = [f"监听服务器启动失败：{repr(bot_info)}"]
+        newToast.on_activated = lambda _: win32api.MessageBox(0, f"监听服务器启动失败：{repr(bot_info)}", "Aoki", win32con.MB_ICONERROR)
+        toaster.show_toast(newToast) 
     finally:
         logger.info("监听服务器结束运行")
 
@@ -234,7 +251,7 @@ def exita():
 def baricon():
     # 托盘菜单
     menu: tuple = (
-        MenuItem('添加开机自启', lambda: add_to_startup()), 
+        MenuItem('添加开机自启', lambda: add_to_startup()),
         Menu.SEPARATOR, 
         MenuItem('重启', lambda: Lib.MuRainLib.restart()),
         MenuItem('退出', lambda: exita())       
@@ -242,7 +259,7 @@ def baricon():
 
     image: Image = Image.open("Lib\\img\\ico\\1.ico")
 
-    icon: pystray.Icon = pystray.Icon("name", title=f"Aoki-运行中\n当前账号： {Lib.Configs.global_config.nick_name}({Lib.Configs.global_config.user_id})\n版本{VERSION}（{VERSION_WEEK}）\n库版本：{Lib.VERSION}（{Lib.VERSION_WEEK}）", icon=image, menu=menu) # type: ignore
+    icon: pystray.Icon = pystray.Icon("name", title=f"Aoki-运行中\n版本{VERSION}（{VERSION_WEEK}）\n库版本：{Lib.VERSION}（{Lib.VERSION_WEEK}）", icon=image, menu=menu) # type: ignore
     icon.run()
 l=threading.Thread(target=baricon)
 l.start()

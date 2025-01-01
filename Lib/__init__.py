@@ -23,7 +23,7 @@ import main
 import Lib.Extra as Extra
 
 VERSION = "1.0"
-VERSION_WEEK = "24#4"
+VERSION_WEEK = "25#1"
 
 
 # Lib信息

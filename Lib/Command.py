@@ -3,8 +3,9 @@ import Lib.EventManager
 import Lib.QQRichText as QQRichText
 import Lib.OnebotAPI as OnebotAPI
 import Lib.MuRainLib as MuRainLib
-import os
+import os,threading
 import Lib.Logger as Logger
+import Lib.GUILib as GUILib
 
 logger = Logger.logger
 
@@ -109,67 +110,22 @@ class Command(metaclass=Meta):
 class SendGroupMsgCommand(Command):
     def __init__(self):
         super().__init__()
-        self.command_help = "send_group_msg: 发送消息到群"
-        self.command_name = "send_group_msg"
+        self.command_help = "SEND_GROUP_MSG: 发送消息到群"
+        self.command_name = "SEND_GROUP_MSG"
 
     def run(self, input_command: CommandParsing, kwargs):
-        try:
-            import tkinter
-            window = tkinter.Tk()
-            window.title("发送消息到群")
-            window.geometry("260x120")
-            lbl = tkinter.Label(window, text="发送到群",font=("Arial", 12))
-            lbl.grid(column=0, row=0)
-            lbl1 = tkinter.Label(window, text="发送内容",font=("Arial", 12))
-            lbl1.grid(column=0, row=2)
-            userID = tkinter.Entry(window, width=15,font=("Arial", 12))
-            userID.grid(column=1, row=0)
-            TexT = tkinter.Entry(window, width=15,font=("Arial", 12))
-            TexT.grid(column=1, row=2)
-            def clicked():
-                Text=str(tkinter.Entry.get(TexT))
-                Userid=int(tkinter.Entry.get(userID))
-                BotController.send_message(QQRichText.QQRichText(Text), group_id=Userid)
-                window.destroy()
-            btn = tkinter.Button(window, text="发送", command=clicked,font=("Arial", 12))
-            btn.grid(column=3, row=3)
-            window.mainloop()
-        except:
-            logger.error("弹出窗口异常")
+        GUILib.SEND_MSG_TO_GROUP()
 
 
 class SendMsgCommand(Command):
     def __init__(self):
         super().__init__()
-        self.command_help = "send_msg: 发送消息到好友"
-        self.command_name = "send_msg"
+        self.command_help = "SEND_MSG: 发送消息到好友"
+        self.command_name = "SEND_MSG"
 
     def run(self, input_command: CommandParsing,kwargs):
-        try:
-            import tkinter
-            window = tkinter.Tk()
-            window.title("发送消息到用户")
-            window.geometry("300x120")
-            lbl = tkinter.Label(window, text="发送到用户",font=("Arial", 12))
-            lbl.grid(column=0, row=0)
-            lbl1 = tkinter.Label(window, text="发送内容",font=("Arial", 12))
-            lbl1.grid(column=0, row=2)
-            userID = tkinter.Entry(window, width=15,font=("Arial", 12))
-            userID.grid(column=1, row=0)
-            TexT = tkinter.Entry(window, width=15,font=("Arial", 12))
-            TexT.grid(column=1, row=2)
-            def clicked():
-                Text=str(tkinter.Entry.get(TexT))
-                Userid=int(tkinter.Entry.get(userID))
-                BotController.send_message(QQRichText.QQRichText(Text), user_id=Userid)
-                window.destroy()
-            btn = tkinter.Button(window, text="发送", command=clicked,font=("Arial", 12))
-            btn.grid(column=3, row=3)
-            window.mainloop()
-        except:
-            logger.error("弹出窗口异常")
+        GUILib.SEND_MSG_TO_USER()
         
-
 
 class ExitCommand(Command):
     def __init__(self):
@@ -178,19 +134,25 @@ class ExitCommand(Command):
         self.command_name = "EXIT"
 
     def run(self, input_command: CommandParsing, kwargs):
-        logger.info("正在删除缓存")
-        MuRainLib.clean_cache()
-        logger.info("正在重启")
-        os.system("CLS")
-        MuRainLib.restart()
+        MuRainLib.finalize_and_cleanup()
+
+class AboutCommand(Command):
+    def __init__(self):
+        super().__init__()
+        self.command_help = "ABOUT: 退出程序"
+        self.command_name = "ABOUT"
+
+    def run(self, input_command: CommandParsing, kwargs):
+        GUILib.ABOUT()
+
 
 
 
 class RunAPICommand(Command):
     def __init__(self):
         super().__init__()
-        self.command_help = "run_api: 运行API"
-        self.command_name = "run_api"
+        self.command_help = "RUN_API: 运行API"
+        self.command_name = "RUN_API"
         self.api = OnebotAPI.OnebotAPI(original=True)
 
     def run(self, input_command: CommandParsing, kwargs):
