@@ -23,7 +23,7 @@ import main
 import Lib.Extra as Extra
 
 VERSION = "1.0"
-VERSION_WEEK = "24#1"
+VERSION_WEEK = "25#1"
 UPDATE_CHECK_CODE = VERSION_WEEK.replace("#","0")
 
 
