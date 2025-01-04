@@ -14,7 +14,7 @@ class PluginInfo(PluginManager.PluginInfo):
         self.DESCRIPTION = "三大平台音乐搜索+播放整合"  # 插件描述
         self.HELP_MSG = "发送“*Play”获取详细功能"  # 插件帮助
         self.IS_HIDDEN = False
-        self.UID = "0964-fcdb-4b423f4e-52836a51-ef7d-ba1d"
+        self.UID = "0bb9-fcdb-4b423f4e-52830210-8174-14f5"
 
 def Gethelp(event_class, event_data: BotController.Event):
     if event_data.message_type == "group":
@@ -158,24 +158,3 @@ def get_playlink(text):
         return match.group().replace("播放链接：","")
     else:
         return None
-    
-def get_permanent_link(url):
-    # 使用requests库发送head请求
-    response = requests.head(url, allow_redirects=True)
-    # 检查是否有重定向发生
-    if 'location' in response.headers:
-        # 如果响应头中包含'location'，则表示发生了重定向
-        # 递归调用自身以处理连续重定向的情况
-        return get_permanent_link(response.headers['location'])
-    else:
-        # 如果没有重定向，则返回当前请求的URL作为永久链接
-        return response.url
-
-def download_music_qq(url):
-    file_name = f'{str(url).split(".")[-1].split("&")[0]}'
-    heads={"cookie":"ptcz=898c37f640cdd21ecfaed2185f75d96dd04236ca1936535d86dfb7eb17e116bc; pgv_pvid=5794844486; iip=0; _qimei_uuid42=1820315142e100686550d018077da0c6de3536c12b; _qimei_fingerprint=d3c60c3b650720acc14bcdd8e80ce840; _qimei_q36=; _qimei_h38=2db8a0446550d018077da0c60200000e418203; suid=0_ea85ea43465bb"}
-    response = requests.get(url,headers=heads)
-    path=f"./data/cache/{file_name}"
-    with open(path, 'wb') as file:
-        file.write(response.content)
-    return file_name
