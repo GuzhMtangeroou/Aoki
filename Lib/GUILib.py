@@ -143,6 +143,7 @@ def UPDATE():
                     window.close()
                     win32api.MessageBox(0, f"下载更新“{d}”完成，请手动安装", "Aoki", win32con.MB_OK)
                 else:
+                    window.close()
                     win32api.MessageBox(0, f"已是最新版本", "Aoki", win32con.MB_OK)
         except:
             text_box.setText("检查更新失败")
