@@ -23,7 +23,8 @@ import main
 import Lib.Extra as Extra
 
 VERSION = "1.0"
-VERSION_WEEK = "25#1"
+VERSION_WEEK = "24#1"
+UPDATE_CHECK_CODE = VERSION_WEEK.replace("#","0")
 
 
 # Lib信息
@@ -33,6 +34,7 @@ class LibInfo:
     def __init__(self):
         self.version = VERSION
         self.version_week = VERSION_WEEK
+        self.update_version_code = UPDATE_CHECK_CODE
 
     def get_lib_version(self):
         return self.version, self.version_week

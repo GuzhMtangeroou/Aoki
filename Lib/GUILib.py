@@ -1,12 +1,11 @@
 import Lib.BotController as BotController
 import Lib.EventManager
 import Lib.QQRichText as QQRichText
-import Lib.OnebotAPI as OnebotAPI
 import Lib.MuRainLib as MuRainLib
-import os
 import Lib.Logger as Logger
-import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QTextEdit, QMessageBox,QVBoxLayout
+import Lib
+import sys,requests,urllib3
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QTextEdit, QProgressBar,QVBoxLayout
 from PyQt5.QtGui import QIntValidator,QPixmap
 from PyQt5.QtCore import Qt
 
@@ -127,4 +126,53 @@ def ABOUT():
     # 显示窗口
     window.show()
     # 进入Qt事件循环
+    app.exec_()
+
+def UPDATE():
+    def update(progress_bar):
+        try:
+            text_box.setText("正在获取更新信息......")
+            dat=MuRainLib.Check_upd()
+            if dat["code"] == 0:
+                text_box.setText("获取更新信息完成")
+                if dat["data"]["LatestVersionWeek"] != Lib.LibInfo().update_version_code:
+                    text_box.setText("正在下载新版本......")
+                    url = dat["data"]["UpdLink-win32"]
+                    local_filename = url.split('/')[-1]  # 从URL中提取文件名
+                    d=MuRainLib.Download_upd(url, local_filename)
+                    text_box.setText(f"下载更新“{d}”完成，请手动安装")
+                else:
+                    text_box.setText("已是最新版本")
+        except:
+            text_box.setText("检查更新失败")
+
+    app = QApplication(sys.argv)
+
+    # 创建主窗口
+    window = QWidget()
+    window.setWindowTitle('PyQt5 Progress Bar and Text Box')
+
+    # 创建布局
+    layout = QVBoxLayout()
+
+
+    # 创建文本框
+    text_box = QLabel()
+    layout.addWidget(text_box)
+
+    # 创建按钮用于模拟进度更新，并连接到更新函数
+    button = QPushButton('检查更新')
+    button.clicked.connect(update)
+    layout.addWidget(button)
+
+    # 设置窗口布局
+    window.setLayout(layout)
+
+    # 窗口尺寸
+    window.resize(300, 200)
+
+    # 显示窗口
+    window.show()
+
+    # 进入应用程序的主循环
     app.exec_()

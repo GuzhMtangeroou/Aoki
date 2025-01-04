@@ -7,9 +7,9 @@ import hashlib
 import logging
 import os
 import sys
-import requests
+import requests,urllib3
 import shutil
-import time
+import time,json,zipfile
 import random
 from collections import OrderedDict
 import Lib.Logger as Logger
@@ -52,86 +52,26 @@ def restart() -> None:
         # 关闭当前程序
         sys.exit()
 
+def Check_upd():
+    urllib3.disable_warnings()
+    headers={
+        "User-Agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36"
+    }
+    a=requests.get("https://guzhmtangeroou.github.io/api.aoki.github.io/Version.json",headers=headers,verify=False)
+    b=json.loads(a.text)
+    return b
 
-def download_file_to_cache(url: str, headers=None, file_name: str = "",
-                           download_path: str = None, stream=False, fake_headers: bool = True) -> str | None:
-    if headers is None:
-        headers = {}
-
-    if fake_headers:
-        headers["User-Agent"] = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                                 "Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42")
-        headers["Accept-Language"] = "zh-CN,zh;q=0.9,en;q=0.8,da;q=0.7,ko;q=0.6"
-        headers["Accept-Encoding"] = "gzip, deflate, br"
-        headers["Accept"] = ("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,"
-                             "application/signed-exchange;v=b3;q=0.7")
-        headers["Connection"] = "keep-alive"
-        headers["Upgrade-Insecure-Requests"] = "1"
-        headers["Cache-Control"] = "max-age=0"
-        headers["Sec-Fetch-Dest"] = "document"
-        headers["Sec-Fetch-Mode"] = "navigate"
-        headers["Sec-Fetch-Site"] = "none"
-        headers["Sec-Fetch-User"] = "?1"
-        headers["Sec-Ch-Ua"] = "\"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\", \"Microsoft Edge\";v=\"113\""
-        headers["Sec-Ch-Ua-Mobile"] = "?0"
-        headers["Sec-Ch-Ua-Platform"] = "\"Windows\""
-        headers["Host"] = url.split("/")[2]
-
-    # 路径拼接
-    flag = False
-    if file_name == "":
-        file_name = hex(int(hash(url.split("/")[-1]) + random.randint(10000, 99999) + time.time()))[2:] + ".cache"
-    else:
-        flag = True
-
-    if download_path is None:
-        file_path = os.path.join(cache_path, file_name)
-    else:
-        file_path = os.path.join(download_path, file_name)
-
-    # 路径不存在特判
-    if not os.path.exists(cache_path):
-        os.makedirs(cache_path)
-
-    try:
-        # 下载
-        if stream:
-            with open(file_path, "wb") as f, requests.get(url, stream=True, headers=headers) as res:
-                for chunk in res.iter_content(chunk_size=64 * 1024):
-                    if not chunk:
-                        break
+def Download_upd(url, local_filename): 
+    # 发送HTTP请求获取远程文件
+    with requests.get(url, stream=True,verify=False) as r:
+        r.raise_for_status()  # 检查请求是否成功
+        with open(local_filename, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192): 
+                if chunk:  # 过滤掉保持活动的没有数据的块
                     f.write(chunk)
-        else:
-            # 不使用流式传输
-            res = requests.get(url, headers=headers)
+                    f.flush()
 
-            with open(file_path, "wb") as f:
-                f.write(res.content)
-    except requests.exceptions.RequestException as e:
-        logging.warning(f"下载文件失败: {e}")
-        if os.path.exists(file_path):
-            os.remove(file_path)
-        return None
-
-    if not flag:
-        # 计算MD5
-        md5_hash = hashlib.md5()
-        with open(file_path, "rb") as f:
-            for byte_block in iter(lambda: f.read(4096), b""):
-                md5_hash.update(byte_block)
-            rename = md5_hash.hexdigest() + ".cache"
-            rename_path = os.path.join(cache_path, rename)
-
-        # 重命名（MD5）
-        if os.path.exists(rename_path):
-            os.remove(rename_path)
-
-        os.rename(file_path, rename_path)
-
-        return rename_path
-    else:
-        return file_path
-
+    return local_filename
 
 # 删除缓存文件
 def clean_cache() -> None:

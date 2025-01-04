@@ -139,11 +139,20 @@ class ExitCommand(Command):
 class AboutCommand(Command):
     def __init__(self):
         super().__init__()
-        self.command_help = "ABOUT: 退出程序"
+        self.command_help = "ABOUT: 关于"
         self.command_name = "ABOUT"
 
     def run(self, input_command: CommandParsing, kwargs):
         GUILib.ABOUT()
+
+class UpdateCheckCommand(Command):
+    def __init__(self):
+        super().__init__()
+        self.command_help = "UPDATE_CHECK: 检查更新"
+        self.command_name = "UPDATE_CHECK"
+
+    def run(self, input_command: CommandParsing, kwargs):
+        GUILib.UPDATE()
 
 
 
