@@ -20,7 +20,7 @@ BANNER = r"""
 BANNER_LINK = "https://github.com/GuzhMtangeroou/Aoki/"
 VERSION = "1.0"  # 版本
 VERSION_WEEK = "2025#1"  # 版本周
-CHECK_CODE = Lib.UPDATE_CHECK_CODE
+CHECK_CODE = 2501
 console_window = win32gui.GetForegroundWindow()
 
 def color_text(text: str, text_color: tuple[int, int, int] = None, bg_color: tuple[int, int, int] = None):
