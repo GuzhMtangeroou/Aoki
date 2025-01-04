@@ -20,7 +20,7 @@ BANNER = r"""
 BANNER_LINK = "https://github.com/GuzhMtangeroou/Aoki/"
 VERSION = "1.0"  # 版本
 VERSION_WEEK = "2025#1"  # 版本周
-CHECK_CODE = 2501
+CHECK_CODE = Lib.UPDATE_CHECK_CODE
 console_window = win32gui.GetForegroundWindow()
 
 def color_text(text: str, text_color: tuple[int, int, int] = None, bg_color: tuple[int, int, int] = None):
@@ -177,11 +177,14 @@ if __name__ == '__main__':
         bot_info = api.get_login_info()
         if not isinstance(bot_info, dict):
             logger.error(f"获取BotUID与昵称失败，可能会导致严重问题({repr(bot_info)})")
-            toaster = WindowsToaster('Python')
-            newToast = Toast()
-            newToast.text_fields = [f"获取BotUID与昵称失败，可能会导致严重问题：{repr(bot_info)}"]
-            newToast.on_activated = lambda _: win32api.MessageBox(0, f"获取BotUID与昵称失败，可能会导致严重问题：{repr(bot_info)}", "Aoki", win32con.MB_ICONERROR)
-            toaster.show_toast(newToast)    
+            try:
+                toaster = WindowsToaster('Python')
+                newToast = Toast()
+                newToast.text_fields = [f"获取BotUID与昵称失败，可能会导致严重问题：{repr(bot_info)}"]
+                newToast.on_activated = lambda _: win32api.MessageBox(0, f"获取BotUID与昵称失败，可能会导致严重问题：{repr(bot_info)}", "Aoki", win32con.MB_ICONERROR)
+                toaster.show_toast(newToast)    
+            except:
+                pass
         elif "user_id" in bot_info and "nickname" in bot_info:
             bot_uid, bot_name = bot_info["user_id"], bot_info["nickname"]
             raw_config = Configs.global_config.raw_config
@@ -191,11 +194,14 @@ if __name__ == '__main__':
             logger.debug("BotUID与昵称来源：自动获取")
         else:
             logger.error(f"获取BotUID与昵称失败，可能会导致严重问题{bot_info}")
-            toaster = WindowsToaster('Python')
-            newToast = Toast()
-            newToast.text_fields = [f"获取BotUID与昵称失败，可能会导致严重问题：{repr(bot_info)}"]
-            newToast.on_activated = lambda _: win32api.MessageBox(0, f"获取BotUID与昵称失败，可能会导致严重问题：{repr(bot_info)}", "Aoki", win32con.MB_ICONERROR)
-            toaster.show_toast(newToast) 
+            try:
+                toaster = WindowsToaster('Python')
+                newToast = Toast()
+                newToast.text_fields = [f"获取BotUID与昵称失败，可能会导致严重问题：{repr(bot_info)}"]
+                newToast.on_activated = lambda _: win32api.MessageBox(0, f"获取BotUID与昵称失败，可能会导致严重问题：{repr(bot_info)}", "Aoki", win32con.MB_ICONERROR)
+                toaster.show_toast(newToast) 
+            except:
+                pass
 
     logger.info(f"欢迎使用 {Configs.global_config.nick_name}({Configs.global_config.user_id})")
 

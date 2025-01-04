@@ -110,8 +110,8 @@ class Command(metaclass=Meta):
 class SendGroupMsgCommand(Command):
     def __init__(self):
         super().__init__()
-        self.command_help = "SEND_GROUP_MSG: 发送消息到群"
-        self.command_name = "SEND_GROUP_MSG"
+        self.command_help = "SEND_GROUP_MSG_GUI: 发送消息到群（GUI版）"
+        self.command_name = "SEND_GROUP_MSG_GUI"
 
     def run(self, input_command: CommandParsing, kwargs):
         GUILib.SEND_MSG_TO_GROUP()
@@ -120,12 +120,59 @@ class SendGroupMsgCommand(Command):
 class SendMsgCommand(Command):
     def __init__(self):
         super().__init__()
-        self.command_help = "SEND_MSG: 发送消息到好友"
-        self.command_name = "SEND_MSG"
+        self.command_help = "SEND_MSG_GUI: 发送消息到好友（GUI版）"
+        self.command_name = "SEND_MSG_GUI"
 
     def run(self, input_command: CommandParsing,kwargs):
         GUILib.SEND_MSG_TO_USER()
         
+class SendGroupMsgCommand(Command):
+    def __init__(self):
+        super().__init__()
+        self.command_help = "SEND_GROUP_MSG <group_id> <message>: 发送消息到群"
+        self.command_name = "SEND_GROUP_MSG"
+        self.need_args = {
+            "group_id": {
+                "type": int,
+                "help": "要发送给的QQ群ID",
+                "default": 0,
+                "must": True
+            },
+            "message": {
+                "type": str,
+                "help": "发送的消息内容",
+                "default": "",
+                "must": True
+            }
+        }
+
+    def run(self, input_command: CommandParsing, kwargs):
+        BotController.send_message(QQRichText.QQRichText(kwargs.get("message")), group_id=kwargs.get("group_id"))
+
+
+class SendMsgCommand(Command):
+    def __init__(self):
+        super().__init__()
+        self.command_help = "SEND_MSG <user_id> <message>: 发送消息到好友"
+        self.command_name = "SEND_MSG"
+        self.need_args = {
+            "user_id": {
+                "type": int,
+                "help": "要发送给的QQ用户ID",
+                "default": 0,
+                "must": True
+            },
+            "message": {
+                "type": str,
+                "help": "发送的消息内容",
+                "default": "",
+                "must": True
+            }
+        }
+
+    def run(self, input_command: CommandParsing, kwargs):
+        BotController.send_message(QQRichText.QQRichText(kwargs.get("message")), user_id=kwargs.get("user_id"))
+
 
 class ExitCommand(Command):
     def __init__(self):
@@ -160,8 +207,8 @@ class UpdateCheckCommand(Command):
 class RunAPICommand(Command):
     def __init__(self):
         super().__init__()
-        self.command_help = "RUN_API: 运行API"
-        self.command_name = "RUN_API"
+        self.command_help = "RUN_API_GUI: 运行API（GUI版）"
+        self.command_name = "RUN_API_GUI"
         self.api = OnebotAPI.OnebotAPI(original=True)
 
     def run(self, input_command: CommandParsing, kwargs):
@@ -190,12 +237,38 @@ class RunAPICommand(Command):
         except:
             logger.error("弹出窗口异常")
 
+class RunAPICommand(Command):
+    def __init__(self):
+        super().__init__()
+        self.command_help = "RUN_API <api_name:api节点> <api_params: api参数dict格式(可选)>: 运行API"
+        self.command_name = "RUN_API"
+        self.need_args = {
+            "api_name": {
+                "type": str,
+                "help": "要运行的API节点",
+                "default": "",
+                "must": True
+            },
+            "api_params": {
+                "type": dict,
+                "help": "API参数",
+                "default": {},
+                "must": False
+            }
+        }
+        self.api = OnebotAPI.OnebotAPI(original=True)
+
+    def run(self, input_command: CommandParsing, kwargs):
+        api_name = kwargs.get("api_name")
+        api_params = kwargs.get("api_params")
+        logger.debug(f"API: {api_name}, 参数: {api_params}")
+        print(self.api.get(api_name, api_params)[1].json())
 
 class HelpCommand(Command):
     def __init__(self):
         super().__init__()
-        self.command_help = "help: 查看帮助"
-        self.command_name = "help"
+        self.command_help = "HELP: 查看帮助"
+        self.command_name = "HELP"
 
     def run(self, input_command: CommandParsing, kwargs):
         help_text = "命令帮助：\n" + "\n".join([command.command_help for command in commands])
@@ -259,7 +332,7 @@ def run_command(input_command):
         except Exception as e:
             logger.error(f"执行命令时发生错误: {repr(e)}")
     else:
-        logger.error("未知的命令, 请发送help查看支持的命令")
+        logger.error("未知的命令, 请发送HELP查看支持的命令")
 
 
 def listening_command():

@@ -4,7 +4,7 @@ import Lib.QQRichText as QQRichText
 import Lib.MuRainLib as MuRainLib
 import Lib.Logger as Logger
 import Lib
-import sys,requests,urllib3
+import sys,win32api,win32con
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QTextEdit, QProgressBar,QVBoxLayout
 from PyQt5.QtGui import QIntValidator,QPixmap
 from PyQt5.QtCore import Qt
@@ -140,7 +140,8 @@ def UPDATE():
                     url = dat["data"]["UpdLink-win32"]
                     local_filename = url.split('/')[-1]  # 从URL中提取文件名
                     d=MuRainLib.Download_upd(url, local_filename)
-                    text_box.setText(f"下载更新“{d}”完成，请手动安装")
+                    window.close()
+                    win32api.MessageBox(0, f"下载更新“{d}”完成，请手动安装", "Aoki", win32con.MB_OK)
                 else:
                     text_box.setText("已是最新版本")
         except:
