@@ -16,7 +16,7 @@ class PluginInfo(PluginManager.PluginInfo):
 def get_about(event_class, event_data: BotController.Event):
     import Lib
     if event_data.message_type == "private":  # 判断是群聊事件还是私聊事件
-        BotController.send_message(f'关于\nAoki\n版本{main.VERSION}（{main.VERSION_WEEK}）\n库版本：{Lib.VERSION}（{Lib.VERSION_WEEK}）\nGithub:https://github.com/GuzhMtangeroou/Aoki/\n\n特别鸣谢\n夏柔api（https://api.aa1.cn/）\nbcmapi（https://github.com/codemaoTeam/Codemao-API）', user_id=event_data.user_id)
+        BotController.send_message(f'关于\nAoki\n版本{main.VERSION}（{main.VERSION_WEEK}）\n库版本：{Lib.VERSION}（{Lib.VERSION_WEEK}）\nGithub:https://github.com/GuzhMtangeroou/Aoki', user_id=event_data.user_id)
     else:
         BotController.send_message(QQRichText.QQRichText(f'关于\nAoki\n版本：{VERSION}（{VERSION_WEEK}）\nGithub:https://github.com/GuzhMtangeroou/Aoki/\n\n特别鸣谢\n夏柔api（https://api.aa1.cn/）\nbcmapi（https://github.com/codemaoTeam/Codemao-API）'),group_id=event_data.group_id)
 

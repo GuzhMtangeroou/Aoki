@@ -58,7 +58,7 @@ def get_info(event_class, event_data: BotController.Event):
         BotController.send_message(QQRichText.QQRichText(final),group_id=event_data.group_id)
 
 def new_here(groupid):
-    BotController.send_message(f"Hello,I'm Aoki,have a great day\n———————————————Github: https://github.com/GuzhMtangeroou/Aoki/\n\nBased on:\nOnebot v11\nMuRainBot2\n已向{len(os.listdir(r".\data\groups"))}个群组提供服务\n\n发送*help，开始使用", group_id=groupid)
+    BotController.send_message(f"Hello,I'm Aoki,have a great day\n———————————————Github: https://github.com/GuzhMtangeroou/Aoki/ \n\nBased on:\nOnebot v11\nMuRainBot2\n\n发送*help，开始使用", group_id=groupid)
 
 def send_welcome_message(groupid):
     BotController.send_message(QQRichText.QQRichText("欢迎新人！",{"type": "image","data":{"file": f"{welcomepic}"}},f"\nAoki已入驻本群哦，发送*help开始使用吧~"),group_id=groupid)
