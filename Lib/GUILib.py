@@ -5,7 +5,7 @@ import Lib.MuRainLib as MuRainLib
 import Lib.Logger as Logger
 import Lib
 import sys,win32api,win32con
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QTextEdit, QProgressBar,QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QTextEdit,QProgressBar
 from PyQt5.QtGui import QIntValidator,QPixmap
 from PyQt5.QtCore import Qt
 
@@ -54,6 +54,7 @@ def SEND_MSG_TO_USER():
     app.exec_()
 
 def SEND_MSG_TO_GROUP():
+    
     def clicked(user_id_input, text_input):
         text = text_input.toPlainText()  # 获取多行文本框的内容
         user_id = int(user_id_input.text())
@@ -95,7 +96,7 @@ def SEND_MSG_TO_GROUP():
     app.exec_()
 
 def ABOUT():
-    import main
+    import main as main
     # 每个Qt应用必须有一个QApplication实例
     app = QApplication(sys.argv)
 
@@ -129,51 +130,72 @@ def ABOUT():
     app.exec_()
 
 def UPDATE():
-    def update(progress_bar):
+    def initUI(window, text_box, progress_bar, button):
+        window.setWindowTitle('检查更新')
+        layout = QVBoxLayout()
+
+        layout.addWidget(text_box)
+
+        layout.addWidget(progress_bar)
+
+        button.clicked.connect(lambda: check_update(text_box, progress_bar, window))
+        layout.addWidget(button)
+
+        window.setLayout(layout)
+        window.resize(300, 200)
+        window.show()
+
+    def check_update(text_box, progress_bar, window):
+        text_box.setText("正在检查更新...")
         try:
-            text_box.setText("正在获取更新信息......")
-            dat=MuRainLib.Check_upd()
+            dat = MuRainLib.Check_upd()
             if dat["code"] == 0:
                 text_box.setText("获取更新信息完成")
-                if dat["data"]["LatestVersionWeek"] != Lib.LibInfo().update_version_code:
-                    text_box.setText("正在下载新版本......")
-                    url = dat["data"]["UpdLink-win32"]
-                    local_filename = url.split('/')[-1]  # 从URL中提取文件名
-                    d=MuRainLib.Download_upd(url, local_filename)
-                    window.close()
-                    win32api.MessageBox(0, f"下载更新“{d}”完成，请手动安装", "Aoki", win32con.MB_OK)
+                current_version = Lib.LibInfo().update_version_code
+                latest_version = dat["data"]["LatestVersionWeek"]
+                if latest_version != current_version:
+                    download_update(dat["data"]["UpdLink-win32"], text_box, progress_bar, window)
                 else:
                     window.close()
-                    win32api.MessageBox(0, f"已是最新版本", "Aoki", win32con.MB_OK)
-        except:
-            text_box.setText("检查更新失败")
+                    win32api.MessageBox(0, "已是最新版本", "Aoki", win32con.MB_OK)
+            else:
+                text_box.setText(f"检查更新失败: {dat.get('message', '未知错误')}")
+        except Exception as e:
+            text_box.setText(f"检查更新失败: {str(e)}")
+            set_progress_bar_to_error(progress_bar)
+
+    def download_update(url, text_box, progress_bar, window):
+        local_filename = url.split('/')[-1]
+        text_box.setText(f"正在下载新版本: {local_filename}")
+        progress_bar.setMaximum(0)  # Indeterminate progress bar
+        try:
+            downloaded_file = MuRainLib.Download_upd(url, local_filename, progress_callback=lambda block_num, block_size, total_size: update_progress(block_num, block_size, total_size, progress_bar))
+            window.close()
+            win32api.MessageBox(0, f"下载更新“{downloaded_file}”完成，请手动安装", "Aoki", win32con.MB_OK)
+        except Exception as e:
+            text_box.setText(f"下载更新失败: {str(e)}")
+            set_progress_bar_to_error(progress_bar)
+        finally:
+            progress_bar.setMaximum(100)  # Reset progress bar to determinate state
+
+    def update_progress(block_num, block_size, total_size, progress_bar):
+        read_data = block_num * block_size
+        if total_size > 0:
+            percent = int(read_data * 100 / total_size)
+            progress_bar.setValue(percent)
+
+    def set_progress_bar_to_error(progress_bar):
+        progress_bar.setValue(100)
+        progress_bar.setStyleSheet("QProgressBar::chunk {background-color: red;}")
 
     app = QApplication(sys.argv)
 
-    # 创建主窗口
     window = QWidget()
-    window.setWindowTitle('PyQt5 Progress Bar and Text Box')
-
-    # 创建布局
-    layout = QVBoxLayout()
-
-
-    # 创建文本框
     text_box = QLabel()
-    layout.addWidget(text_box)
-
+    progress_bar = QProgressBar()
+    progress_bar.setAlignment(Qt.AlignCenter)
     button = QPushButton('检查更新')
-    button.clicked.connect(update)
-    layout.addWidget(button)
 
-    # 设置窗口布局
-    window.setLayout(layout)
+    initUI(window, text_box, progress_bar, button)
 
-    # 窗口尺寸
-    window.resize(300, 200)
-
-    # 显示窗口
-    window.show()
-
-    # 进入应用程序的主循环
     app.exec_()

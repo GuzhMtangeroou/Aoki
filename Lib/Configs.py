@@ -80,6 +80,11 @@ class GlobalConfig(Config):
         self.max_cache_size = self.raw_config["qq_data_cache"]["max_cache_size"]
         self.debug = self.raw_config["debug"]["enable"]
         self.auto_restart_onebot = self.raw_config["auto_restart_onebot"]["enable"]
+        self.life_start = self.raw_config["life"]["enable"]
+        self.life_start_online_time = self.raw_config["life"]["online_time"]
+        self.life_start_offline_time = self.raw_config["life"]["offline_time"]
+        self.life_max_online_time = self.raw_config["life"]["max_online_time"]
+        self.life_max_offline_time = self.raw_config["life"]["max_offline_time"]
 
     def write_cache(self, item):
         super().write_cache(item)
