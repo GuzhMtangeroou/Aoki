@@ -11,7 +11,7 @@
 ## 部署
 > 首先我们需要下载这个项目
 1. 打开本项目的主页
-2. 点击“Code”按钮
+2. 点击“Code”按钮或直接从[Release](https://github.com/GuzhMtangeroou/Aoki/releases)中下载最新版本
 3. 点击“Download ZIP”
 > 什么？你说你找不到？这是链接，直接戳这个下载吧: [我是链接](https://github.com/GuzhMtangeroou/Aoki/archive/refs/heads/master.zip)
 ---
@@ -26,23 +26,29 @@
 > 很棒，你肯定已经成功运行了，那么此时你应该在终端内发现了几条log和一个ERROR提示，不要担心，这是正常情况，接下来我们来解决它~
 **附：~~（可能是）~~正常启动的log**
 ```text
-[2024-12-14 20:03:11,348] [main.py] [INFO]: 开始运行，当前版本：1.0(24#4)
-[2024-12-14 20:03:11,856] [main.py] [INFO]: 插件导入完成，共成功导入 4 个插件:
-[2024-12-14 20:03:11,857] [main.py] [INFO]: 插件导入完成，共导入 4 个插件:
-[2024-12-14 20:03:11,857] [main.py] [INFO]:  - About: About by ？,UID:0964-fcdb-4b423f4e-52836a51-ef7d-ba1d
-[2024-12-14 20:03:11,857] [main.py] [INFO]:  - Control: CTRL by vika,UID:0964-fcdb-4b423f4e-52836a51-ef7d-ba1d
-[2024-12-14 20:03:11,857] [main.py] [INFO]:  - Helper: Helper by 你说是校溯还是vika,UID:0964-fcdb-4b423f4e-52836a51-ef7d-ba1d
-[2024-12-14 20:03:11,857] [main.py] [INFO]:  - pluginTemplates: HelloWorld by You,UID:0964-fcdb-4b423f4e-52836a51-ef7d-ba1d
-[2024-12-14 20:03:11,857] [main.py] [INFO]:  - Manager: Manager  by ？,UID:0964-fcdb-4b423f4e-52836a51-ef7d-ba1d
-[2024-12-14 20:03:11,858] [main.py] [INFO]:  - Play: Play  by vika,UID:0964-fcdb-4b423f4e-52836a51-ef7d-ba1d
-[2024-12-14 20:03:11,859] [main.py] [INFO]: 将以127.0.0.1:5801启动监听服务器
-[2024-12-14 20:03:11,859] [main.py] [INFO]: 将以http://127.0.0.1:5800调用API
-[2024-12-14 20:03:11,859] [main.py] [INFO]: BotUID或昵称来源：自动获取......
-[2024-12-14 20:03:13,893] [OnebotAPI.py] [ERROR]: 调用 API: /get_login_info data: None 异常: ConnectionError(MaxRetryError("HTTPConnectionPool(host='127.0.0.1', port=5800): Max retries exceeded with url: /get_login_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002445693BCD0>: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。'))"))
-[2024-12-14 20:03:13,894] [main.py] [ERROR]: 获取BotUID与昵称失败，可能会导致严重问题(ConnectionError(MaxRetryError("HTTPConnectionPool(host='127.0.0.1', port=5800): Max retries exceeded with url: /get_login_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002445693BCD0>: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。'))")))
-[2024-12-14 20:03:13,895] [main.py] [INFO]: 欢迎使用 (None)
-[2024-12-14 20:03:13,896] [main.py] [INFO]: 开启命令输入
-[2024-12-14 20:03:13,896] [main.py] [INFO]: 启动监听服务器
+                _    _ 
+     /\        | |  (_)
+    /  \   ___ | | ___ 
+   / /\ \ / _ \| |/ / |
+  / ____ \ (_) |   <| |
+ /_/    \_\___/|_|\_\_|
+
+https://github.com/GuzhMtangeroou/Aoki/
+正在加载 Lib...
+Lib 加载完成
+[2025-01-17 23:18:47] [main.py] [INFO]: 开始运行，当前版本：1.0(25#1)
+[2025-01-17 23:18:48] [main.py] [INFO]: 插件导入完成，共成功导入 x 个插件:
+[2025-01-17 23:18:48] [main.py] [INFO]:  - About: About  by ？,UID:0bb9-fcdb-4b423f4e-52830210-8174-14f5
+(以此类推)
+[2025-01-17 23:18:48] [main.py] [INFO]: 将以127.0.0.1:5701启动监听服务器
+[2025-01-17 23:18:48] [main.py] [INFO]: 将以http://127.0.0.1:5700调用API
+[2025-01-17 23:18:48] [main.py] [INFO]: BotUID或昵称来源：自动获取......
+[2025-01-17 23:18:50] [OnebotAPI.py] [ERROR]: 调用 API: /get_login_info data: None 异常: ConnectionError(MaxRetryError("HTTPConnectionPool(host='127.0.0.1', port=5700): Max retries exceeded with url: /get_login_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023C0EFE7AA0>: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。'))"))
+[2025-01-17 23:18:50] [main.py] [ERROR]: 获取BotUID与昵称失败，可能会导致严重问题(ConnectionError(MaxRetryError("HTTPConnectionPool(host='127.0.0.1', port=5700): Max retries exceeded with url: /get_login_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023C0EFE7AA0>: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。'))")))
+[2025-01-17 23:18:50] [main.py] [INFO]: 欢迎使用 (None)
+[2025-01-17 23:18:50] [main.py] [INFO]: 开启命令输入
+[2025-01-17 23:18:52] [OnebotAPI.py] [ERROR]: 调用 API: /get_login_info data: None 异常: ConnectionError(MaxRetryError("HTTPConnectionPool(host='127.0.0.1', port=5700): Max retries exceeded with url: /get_login_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023C0FEB3E90>: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。'))"))
+[2025-01-17 23:18:52] [main.py] [INFO]: 启动监听服务器
 ```
 ---
 ### 安装Onebot实现端
@@ -74,7 +80,7 @@
         {
             "Type": "HttpPost",
             "Host": "127.0.0.1",
-            "Port": 5841,
+            "Port": 5701,
             "Suffix": "/",
             "HeartBeatInterval": 5000,
             "AccessToken": ""
@@ -82,7 +88,7 @@
           {
             "Type": "Http",
             "Host": "127.0.0.1",
-            "Port": 5840,
+            "Port": 5700,
             "AccessToken": ""
           }
     ]
@@ -91,59 +97,7 @@
 ### 配置
 > 恭喜你，你已经成功安装Onebot实现端，接下来我们开始配置Bot吧！
 
-首先运行(`ConfigEditior.pyw`)，欸，配置文件有点抽象怎么办？~~其实注释在这（）~~
-```text
-#配置文件
-
-#账号
-account: # 账号相关
-  user_id:   # QQ账号（留空则自动获取）
-  nick_name: "" #昵称（留空则自动获取）
-  bot_admin: []
-
-#网络
-api: # Api设置
-  host: '127.0.0.1'
-  port: 5800
-
-server: # 监听服务器设置
-  host: '127.0.0.1'
-  port: 5801
-
-rc: # 远程连接设置
-  start: false #是否开放远程连接
-  host: '127.1.0.1'
-  port: 5001
-
-#启动
-start_img:
-  show: true #是否显示启动图
-  height: 128 #启动图高
-  weight: 128 #启动图宽
-
-show_cmd:
-  show: true #启动时是否显示控制台
-
-color_word:
-  show: false #启动时是否显示渐变色文字
-  
-#其他
-thread_pool: # 线程池最大线程数
-  max_workers: 5
-
-qq_data_cache: # QQ数据缓存设置
-  enable: true # 是否启用缓存
-  expire_time: 300  # 缓存过期时间（秒）
-  max_cache_size: 500  # 最大缓存数量（设置过大可能会导致报错）
-
-
-debug: # 调试模式
-  enable: false # 是否启用调试模式
-
-auto_restart_onebot: # 在Onebot实现端状态异常时自动重启Onebot实现端（需开启心跳包）
-  enable: true # 是否启用自动重启
-```
-
+首先用记事本打开`config.yml`
 您只需要在account.bot_admin中添加您自己的QQ号即可，其余的配置项暂时可以不用管他
 
 ---
