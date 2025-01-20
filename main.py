@@ -20,6 +20,7 @@ def machine_check():
 checkcode=machine_check()
 if checkcode == -1:
     print("版本错误，请下载正确的版本")
+    time.sleep(3)
     Lib.MuRainLib.finalize_and_cleanup()
 elif checkcode == -2:
     print(f"当前Windows版本过低，运行可能出现错误\n注意：我们将不会受理在此状态下运行的报错")
