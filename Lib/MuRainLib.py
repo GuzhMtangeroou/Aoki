@@ -57,7 +57,7 @@ def Check_upd():
     headers={
         "User-Agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36"
     }
-    a=requests.get("https://guzhmtangeroou.github.io/api.aoki.github.io/Version.json",headers=headers,verify=False)
+    a=requests.get("https://guzhmtangeroou.github.io/api.aoki.github.io/Version.json",verify=False)
     b=json.loads(a.text)
     return b
 

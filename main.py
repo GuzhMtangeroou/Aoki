@@ -3,12 +3,11 @@ import threading
 import Lib.MuRainLib
 import Lib.ThreadPool
 import Lib.GUILib
-import os,platform,pystray
+import os,time,platform,pystray,psutil
 from PIL import Image
 from pystray import MenuItem
 import win32gui,win32con,win32api
 from windows_toasts import Toast, WindowsToaster
-from datetime import datetime
 
 def machine_check():
     os_name = platform.system()
@@ -27,6 +26,7 @@ def machine_check():
 checkcode=machine_check()
 if checkcode == -1:
     print("版本错误，请下载正确的版本")
+    time.sleep(3)
     Lib.MuRainLib.finalize_and_cleanup()
 elif checkcode == -2:
     print(f"当前Windows版本过低，运行可能出现错误\n注意：我们将不会受理在此状态下运行的报错")
@@ -47,21 +47,6 @@ VERSION = "1.0"  # 版本
 VERSION_WEEK = "2025#1"  # 版本周
 CHECK_CODE = 2501
 console_window = win32gui.GetForegroundWindow()
-
-def machine_check():
-    os_name = platform.system()
-    os_version = platform.version()
-    python_version=platform.python_version()
-    if os_name == "Windows":
-        if os_version.replace(".","") >= "6.3.9200".replace(".",""):
-            if python_version.replace(".","") >= "3.11.4".replace(".",""):
-                return 1
-            else:
-                return -3
-        else:
-            return -2
-    else:
-        return -1
 
 def color_text(text: str, text_color: tuple[int, int, int] = None, bg_color: tuple[int, int, int] = None):
     text = text + "\033[0m" if text_color is not None or bg_color is not None else text
@@ -252,42 +237,6 @@ if __name__ == '__main__':
     # 禁用werkzeug的日志记录
     log = logging.getLogger('werkzeug')
     log.disabled = True
-    
-    """
-    # 生命周期模拟
-    if Configs.GlobalConfig().life_start:
-        logger.info("生命周期侦测开始")
-        def simulate_online():
-            is_off=0
-            while True:
-                current_time = datetime.now()
-                # 判断是否在22:00到9:00之间
-                if Configs.GlobalConfig().life_start_offline_time <= current_time.hour < 24 or 0 <= current_time.hour < Configs.GlobalConfig().life_start_online_time:
-                    if is_off==0:
-                        logger.info(f"[生命周期]离线")
-                        os.system(f"Lib\pkg\pssuspend.exe Lagrange.OneBot.exe")
-                        is_off=1
-                    else:
-                        pass
-                else:
-                    is_off=0
-                    offline_start_time = current_time
-                    logger.info(f"[生命周期]离线状态开始")
-                    offline_duration = random.randint(337, Configs.GlobalConfig().life_max_offline_time)
-                    time.sleep(offline_duration)
-                    offline_end_time = datetime.now()
-                    logger.info(f"[生命周期]离线状态结束 ({offline_duration} 秒)")
-                    online_start_time = current_time
-                    logger.info(f"[生命周期]在线状态开始")
-                    os.system(f"Lib\pkg\pssuspend.exe -r Lagrange.OneBot.exe")
-                    online_duration = random.randint(1832, Configs.GlobalConfig().life_max_online_time)
-                    time.sleep(online_duration)
-                    online_end_time = datetime.now()
-                    logger.info(f"[生命周期]在线状态结束 ({online_duration} 秒)")
-        h=threading.Thread(target=simulate_online)
-        h.start()
-        """
-
     # 启动监听服务器
     try:
         logger.info("启动监听服务器")
