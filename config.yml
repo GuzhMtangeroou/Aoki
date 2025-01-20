@@ -47,10 +47,3 @@ debug: # 调试模式
 
 auto_restart_onebot: # 在Onebot实现端状态异常时自动重启Onebot实现端（需开启心跳包）
   enable: true # 是否启用自动重启
-
-life: # 生命周期（未实现）
-  enable: true #是否启用
-  online_time: 9 #在线开始时间
-  offline_time: 22 #离线开始时间
-  max_online_time: 72 #最大在线时间（秒）
-  max_offline_time: 9 #最大离线时间（秒）
