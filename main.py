@@ -2,7 +2,7 @@
 import threading
 import Lib.MuRainLib
 import Lib.ThreadPool
-import os,platform
+import os,platform,time
 from PIL import Image
 from datetime import datetime
 
@@ -73,42 +73,6 @@ def get_gradient(start_color: tuple[int, int, int], end_color: tuple[int, int, i
         int(start_color[2] + (end_color[2] - start_color[2]) * length)
     )
 
-def start_window():
-    if Configs.GlobalConfig().start_showpic == True:        
-        try:
-            time.sleep(1)
-            import tkinter as tk  
-            startwindow=tk.Tk()
-            startwindow.title('')
-            startwindow.resizable(False,False)
-            startwindow.overrideredirect(1)
-            startwindow.wm_attributes("-topmost", True)
-            w1=startwindow.winfo_screenwidth() #获取屏幕宽
-            h1=startwindow.winfo_screenheight() #获取屏幕高
-            w2=Configs.GlobalConfig().startpic_w #指定当前窗体宽
-            h2=Configs.GlobalConfig().startpic_h#指定当前窗体高
-            startwindow.geometry("%dx%d+%d+%d"%(w2,h2,(w1-w2)/2,(h1-h2)/2))
-
-            photo = tk.PhotoImage(file="Lib\\img\\start\\1.gif")
-            # 显示图像
-            label = tk.Label(startwindow, image=photo)
-            label.pack()
-
-            def autoClose():
-                time.sleep(5)
-                startwindow.destroy()
-                
-
-            t=threading.Thread(target=autoClose)
-            t.start()
-
-            startwindow.mainloop()
-        except:
-            return -1
-        return 1
-    else:
-        return 0
-
 # 主函数
 if __name__ == '__main__':
     import Lib.Configs as Configs
@@ -141,8 +105,6 @@ if __name__ == '__main__':
     Lib.ThreadPool.init()
     request_list = []
     logger = Logger.logger
-    if start_window() == -1:
-        logger.error("启动界面出现异常")
 
     logger.info(f"开始运行，当前版本：{VERSION}({VERSION_WEEK})")
 
@@ -227,41 +189,6 @@ if __name__ == '__main__':
     # 禁用werkzeug的日志记录
     log = logging.getLogger('werkzeug')
     log.disabled = True
-    
-    """
-    # 生命周期模拟
-    if Configs.GlobalConfig().life_start:
-        logger.info("生命周期侦测开始")
-        def simulate_online():
-            is_off=0
-            while True:
-                current_time = datetime.now()
-                # 判断是否在22:00到9:00之间
-                if Configs.GlobalConfig().life_start_offline_time <= current_time.hour < 24 or 0 <= current_time.hour < Configs.GlobalConfig().life_start_online_time:
-                    if is_off==0:
-                        logger.info(f"[生命周期]离线")
-                        os.system(f"Lib\pkg\pssuspend.exe Lagrange.OneBot.exe")
-                        is_off=1
-                    else:
-                        pass
-                else:
-                    is_off=0
-                    offline_start_time = current_time
-                    logger.info(f"[生命周期]离线状态开始")
-                    offline_duration = random.randint(337, Configs.GlobalConfig().life_max_offline_time)
-                    time.sleep(offline_duration)
-                    offline_end_time = datetime.now()
-                    logger.info(f"[生命周期]离线状态结束 ({offline_duration} 秒)")
-                    online_start_time = current_time
-                    logger.info(f"[生命周期]在线状态开始")
-                    os.system(f"Lib\pkg\pssuspend.exe -r Lagrange.OneBot.exe")
-                    online_duration = random.randint(1832, Configs.GlobalConfig().life_max_online_time)
-                    time.sleep(online_duration)
-                    online_end_time = datetime.now()
-                    logger.info(f"[生命周期]在线状态结束 ({online_duration} 秒)")
-        h=threading.Thread(target=simulate_online)
-        h.start()
-        """
 
     # 启动监听服务器
     try:
