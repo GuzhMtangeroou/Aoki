@@ -1,11 +1,11 @@
 import Lib.BotController as BotController
 import Lib.EventManager
+import Lib.MuRainLib
 import Lib.QQRichText as QQRichText
 import Lib.OnebotAPI as OnebotAPI
 import Lib.MuRainLib as MuRainLib
 import os,threading
 import Lib.Logger as Logger
-import Lib.GUILib as GUILib
 
 logger = Logger.logger
 
@@ -105,26 +105,6 @@ class Command(metaclass=Meta):
     def run(self, input_command: CommandParsing, kwargs):
         # 执行命令
         pass
-
-
-class SendGroupMsgCommand(Command):
-    def __init__(self):
-        super().__init__()
-        self.command_help = "SEND_GROUP_MSG_GUI: 发送消息到群（GUI版）"
-        self.command_name = "SEND_GROUP_MSG_GUI"
-
-    def run(self, input_command: CommandParsing, kwargs):
-        GUILib.SEND_MSG_TO_GROUP()
-
-
-class SendMsgCommand(Command):
-    def __init__(self):
-        super().__init__()
-        self.command_help = "SEND_MSG_GUI: 发送消息到好友（GUI版）"
-        self.command_name = "SEND_MSG_GUI"
-
-    def run(self, input_command: CommandParsing,kwargs):
-        GUILib.SEND_MSG_TO_USER()
         
 class SendGroupMsgCommand(Command):
     def __init__(self):
@@ -183,15 +163,6 @@ class ExitCommand(Command):
     def run(self, input_command: CommandParsing, kwargs):
         MuRainLib.finalize_and_cleanup()
 
-class AboutCommand(Command):
-    def __init__(self):
-        super().__init__()
-        self.command_help = "ABOUT: 关于"
-        self.command_name = "ABOUT"
-
-    def run(self, input_command: CommandParsing, kwargs):
-        GUILib.ABOUT()
-
 class UpdateCheckCommand(Command):
     def __init__(self):
         super().__init__()
@@ -199,7 +170,7 @@ class UpdateCheckCommand(Command):
         self.command_name = "UPDATE_CHECK"
 
     def run(self, input_command: CommandParsing, kwargs):
-        GUILib.UPDATE()
+        Lib.MuRainLib.Check_upd()
 
 
 
