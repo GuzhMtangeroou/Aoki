@@ -1,11 +1,9 @@
 import Lib.BotController as BotController
-import Lib.EventManager
-import Lib.MuRainLib
 import Lib.QQRichText as QQRichText
 import Lib.OnebotAPI as OnebotAPI
 import Lib.MuRainLib as MuRainLib
-import os,threading
 import Lib.Logger as Logger
+import platform
 
 logger = Logger.logger
 
@@ -163,15 +161,6 @@ class ExitCommand(Command):
     def run(self, input_command: CommandParsing, kwargs):
         MuRainLib.finalize_and_cleanup()
 
-class UpdateCheckCommand(Command):
-    def __init__(self):
-        super().__init__()
-        self.command_help = "UPDATE_CHECK: 检查更新"
-        self.command_name = "UPDATE_CHECK"
-
-    def run(self, input_command: CommandParsing, kwargs):
-        Lib.MuRainLib.Check_upd()
-
 
 
 
@@ -183,30 +172,33 @@ class RunAPICommand(Command):
         self.api = OnebotAPI.OnebotAPI(original=True)
 
     def run(self, input_command: CommandParsing, kwargs):
-        try:
-            import tkinter
-            window = tkinter.Tk()
-            window.title("运行API")
-            window.geometry("300x120")
-            lbl = tkinter.Label(window, text="API节点",font=("Arial", 12))
-            lbl.grid(column=0, row=0)
-            lbl1 = tkinter.Label(window, text="参数（可选）",font=("Arial", 12))
-            lbl1.grid(column=0, row=2)
-            Point = tkinter.Entry(window, width=15,font=("Arial", 12))
-            Point.grid(column=1, row=0)
-            More = tkinter.Entry(window, width=15,font=("Arial", 12))
-            More.grid(column=1, row=2)
-            def clicked():        
-                api_name = tkinter.Entry.get(Point)
-                api_params = tkinter.Entry.get(More)
-                logger.debug(f"API: {api_name}, 参数: {api_params}")
-                print(self.api.get(api_name, api_params)[1].json())
-                window.destroy()
-            btn = tkinter.Button(window, text="运行", command=clicked,font=("Arial", 12))
-            btn.grid(column=3, row=3)
-            window.mainloop()
-        except:
-            logger.error("弹出窗口异常")
+        if platform.system() == "Darwin":
+            logger.warning("MacOS下无法调用GUI")
+        else:
+            try:
+                import tkinter
+                window = tkinter.Tk()
+                window.title("运行API")
+                window.geometry("300x120")
+                lbl = tkinter.Label(window, text="API节点")
+                lbl.grid(column=0, row=0)
+                lbl1 = tkinter.Label(window, text="参数（可选）")
+                lbl1.grid(column=0, row=2)
+                Point = tkinter.Entry(window, width=15)
+                Point.grid(column=1, row=0)
+                More = tkinter.Entry(window, width=15)
+                More.grid(column=1, row=2)
+                def clicked():        
+                    api_name = tkinter.Entry.get(Point)
+                    api_params = tkinter.Entry.get(More)
+                    logger.debug(f"API: {api_name}, 参数: {api_params}")
+                    print(self.api.get(api_name, api_params)[1].json())
+                    window.destroy()
+                btn = tkinter.Button(window, text="运行", command=clicked)
+                btn.grid(column=3, row=3)
+                window.mainloop()
+            except:
+                logger.error("弹出窗口异常")
 
 class RunAPICommand(Command):
     def __init__(self):

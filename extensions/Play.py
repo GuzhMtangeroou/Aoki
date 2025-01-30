@@ -1,11 +1,10 @@
 from Lib import *
 import re
-import Lib.MuRainLib
 
 api = OnebotAPI.OnebotAPI()
 
 #插件信息
-class PluginInfo(PluginManager.PluginInfo):
+class PluginInfo(ExsManager.PluginInfo):
     def __init__(self):
         super().__init__()
         self.NAME = "Play"  # 插件名称
@@ -14,7 +13,7 @@ class PluginInfo(PluginManager.PluginInfo):
         self.DESCRIPTION = "三大平台音乐搜索+播放整合"  # 插件描述
         self.HELP_MSG = "发送“*Play”获取详细功能"  # 插件帮助
         self.IS_HIDDEN = False
-        self.UID = "0bb9-fcdb-4b423f4e-52830210-8174-14f5"
+        self.UID = "09c5-2cbb-36ac4b54-9ff182ab-3277-8ebe"
 
 def Gethelp(event_class, event_data: BotController.Event):
     if event_data.message_type == "group":
@@ -26,7 +25,7 @@ def Gethelp(event_class, event_data: BotController.Event):
 def NeteaseMusicPlay_id(event_class, event_data: BotController.Event):
     if event_data.message_type == "group":  # 判断是群聊事件还是私聊事件
         rec=str(event_data.message)
-        playid=str(rec.split(' ')[-1])
+        playid=get_id(rec)
         BotController.send_message(QQRichText.QQRichText(QQRichText.Reply(event_data["message_id"]), " 正在获取，请稍侯（若未发送歌曲则可能该歌曲为VIP歌曲或歌曲不存在）..."),group_id=event_data.group_id)
         BotController.send_message(QQRichText.QQRichText(
             {"type": "record",
@@ -134,13 +133,13 @@ def KugouMusicSearch(event_class, event_data: BotController.Event):
             BotController.send_message(QQRichText.QQRichText(QQRichText.Reply(event_data["message_id"]), "未知的指令或参数，请检查输入是否合法"),group_id=event_data.group_id)
     time.sleep(5)
 
-EventManager.register_keyword("*163Play，id=", NeteaseMusicPlay_id,model="BEGIN")
-EventManager.register_keyword("https://music.163.com/#/song", NeteaseMusicPlay_Link,model="BEGIN")
-EventManager.register_keyword("*163Play,id=", NeteaseMusicPlay_id,model="BEGIN")
-EventManager.register_keyword("*163Play ", NeteaseMusicSearch,model="BEGIN")
-EventManager.register_keyword("*QQPlay ", QQMusicSearch,model="BEGIN")
-EventManager.register_keyword("*KugouPlay ", QQMusicSearch,model="BEGIN")
-EventManager.register_keyword("*Play", Gethelp,model="EQUAL")
+EventManager.register_keyword("163Play，id=", NeteaseMusicPlay_id,model="BEGIN")
+EventManager.register_keyword("music.163.com/#/song", NeteaseMusicPlay_Link,cmdstart=False)
+EventManager.register_keyword("music.163.com/song", NeteaseMusicPlay_Link,cmdstart=False)
+EventManager.register_keyword("163Play ", NeteaseMusicSearch,model="BEGIN")
+EventManager.register_keyword("QQPlay ", QQMusicSearch,model="BEGIN")
+EventManager.register_keyword("KugouPlay ", QQMusicSearch,model="BEGIN")
+EventManager.register_keyword("Play", Gethelp,model="EQUAL")
 
 def get_id(text):
     # 匹配url的正则表达式

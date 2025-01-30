@@ -10,7 +10,7 @@ import Lib.BotController as BotController
 import Lib.EventManager as EventManager
 import Lib.QQRichText as QQRichText
 import Lib.Logger as Logger
-import Lib.PluginManager as PluginManager
+import Lib.ExsManager as ExsManager
 import Lib.QQDataCacher as QQDataCacher
 import os
 import time
@@ -49,9 +49,6 @@ def heartbeat_check():
 
 
 threading.Thread(target=heartbeat_check, daemon=True).start()
-
-# TODO: 实现从一大串的if嵌套转为下面这段
-#等写完了再说
 
 
 # 上报
@@ -114,7 +111,7 @@ def post_data():
             # 如果获取群文件夹路径不存在, 则创建
             if not os.path.exists(group_path):
                 try:
-                    import plugins.Control as Control
+                    import extensions.Control as Control
                     Control.new_here(data.group_id)
                     os.makedirs(group_path)
                 except:
@@ -189,7 +186,7 @@ def post_data():
                             
                 outtime=str(time.strftime("%H:%M:%S %Y-%m-%d", time.localtime()))
                 try:
-                    import plugins.Control as Control
+                    import extensions.Control as Control
                     Control.bot_has_kicked(outtime,group.group_id)
                 except:
                     logger.error("核心插件异常")
@@ -205,7 +202,7 @@ def post_data():
                             (group.group_name, group.group_id, operator.get_group_name(),
                              operator.user_id, user.get_group_name(), user.user_id))
                 try:
-                    import plugins.Control as Control
+                    import extensions.Control as Control
                     Control.send_welcome_message(group.group_id)
                 except:
                     logger.error("核心插件异常")
@@ -215,7 +212,7 @@ def post_data():
                             (group.group_name, group.group_id, operator.get_group_name(),
                              operator.user_id, user.get_group_name(), user.user_id))
                 try:
-                    import plugins.Control as Control
+                    import extensions.Control as Control
                     Control.send_welcome_message(group.group_id)
                 except:
                     logger.error("核心插件异常")
@@ -335,7 +332,7 @@ def post_data():
         EventManager.Event(data.post_type, data)
 
     # 若插件包含main函数则运行
-    PluginManager.run_plugin_main(data)
+    ExsManager.run_plugin_main(data)
 
     return "ok", 204
 

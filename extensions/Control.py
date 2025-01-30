@@ -1,14 +1,13 @@
-import Lib.PluginManager,Lib.MuRainLib
+import Lib.ExsManager,Lib.MuRainLib
 from Lib import *
 import os,time
-import platform,psutil,json
+import platform,psutil
 
 api = OnebotAPI.OnebotAPI()
 admin = Configs.GlobalConfig().bot_admin#管理员账号
-speclist=[866713781]
 welcomepic="https://static.codemao.cn/pickduck/HJoyN3rzkl.jpg"
 
-class PluginInfo(PluginManager.PluginInfo):
+class PluginInfo(ExsManager.PluginInfo):
     def __init__(self):
         super().__init__()
         self.NAME = "CTRL"  # 插件名称
@@ -16,7 +15,7 @@ class PluginInfo(PluginManager.PluginInfo):
         self.VERSION = "1.0.0"  # 插件版本
         self.DESCRIPTION = "控制功能"  # 插件描述
         self.IS_HIDDEN = True
-        self.UID = "0bb9-fcdb-4b423f4e-52830210-8174-14f5"
+        self.UID = "09c5-6a4e-f24cb01a-a0e945da-f026-30e7"
 
 
 
@@ -58,7 +57,15 @@ def get_info(event_class, event_data: BotController.Event):
         BotController.send_message(QQRichText.QQRichText(final),group_id=event_data.group_id)
 
 def new_here(groupid):
-    BotController.send_message(f"Hello,I'm Aoki,have a great day\n———————————————Github: https://github.com/GuzhMtangeroou/Aoki/ \n\nBased on:\nOnebot v11\nMuRainBot2\n\n发送*help，开始使用", group_id=groupid)
+    subfolder_count = 0
+    path = os.path.join(data_path, "groups")
+    # 遍历指定路径下的所有条目
+    for entry in os.scandir(path):
+        # 检查是否为文件夹
+        if entry.is_dir():
+            subfolder_count += 1
+    
+    BotController.send_message(f"Hello,I'm Aoki,have a great day\n———————————————\nGithub: https://github.com/GuzhMtangeroou/Aoki/ \n\nBased on:\nOnebot v11\nMuRainBot2\n已入驻{subfolder_count}个群组\n用户协议：https://static.codemao.cn/pickduck/SJ1KM8QOyx.pdf \n\n发送*help，开始使用", group_id=groupid)
 
 def send_welcome_message(groupid):
     BotController.send_message(QQRichText.QQRichText("欢迎新人！",{"type": "image","data":{"file": f"{welcomepic}"}},f"\nAoki已入驻本群哦，发送*help开始使用吧~"),group_id=groupid)
@@ -71,6 +78,6 @@ def pong(event_class, event_data: BotController.Event):
         BotController.send_message(QQRichText.QQRichText("pong!"), user_id=event_data.user_id)
 
 
-EventManager.register_keyword("/状态", get_info,model="EQUAL")
-EventManager.register_keyword("RESTART", reboot_pro,model="EQUAL")
-EventManager.register_keyword("ping", pong,model="EQUAL")
+EventManager.register_keyword("状态", get_info,model="EQUAL")
+EventManager.register_keyword("RESTART", reboot_pro,model="EQUAL",cmdstart=False)
+EventManager.register_keyword("ping", pong,model="EQUAL",cmdstart=False)

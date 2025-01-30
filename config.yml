@@ -1,8 +1,9 @@
+
 #配置文件
 
 #账号
 account: # 账号相关
-  user_id:   # QQ账号（留空则自动获取）
+  user_id:    # QQ账号（留空则自动获取）
   nick_name: "" #昵称（留空则自动获取）
   bot_admin: []
 
@@ -14,30 +15,13 @@ api: # Api设置
 server: # 监听服务器设置
   host: '127.0.0.1'
   port: 5701
-
-rc: # 远程连接设置（未实现）
-  start: false #是否开放远程连接
-  host: '127.1.0.1'
-  port: 5001
-
-#启动
-start_img:
-  show: false #是否显示启动图
-  height: 128 #启动图高
-  weight: 128 #启动图宽
-
-show_cmd:
-  show: true #启动时是否显示控制台
-
-color_word:
-  show: false #启动时是否显示渐变色文字
   
 #其他
-thread_pool: # 线程池最大线程数
-  max_workers: 7
+thread_pool: 
+  max_workers: 8 # 线程池最大线程数
 
-qq_data_cache: # QQ数据缓存设置
-  enable: true # 是否启用缓存
+qq_data_cache:  # QQ数据缓存设置
+  enable: true  # 是否启用缓存（非常不推荐关闭缓存，对于对于需要无缓存的场景，推荐在插件内自行调用api来获取而非关闭此配置项）
   expire_time: 300  # 缓存过期时间（秒）
   max_cache_size: 500  # 最大缓存数量（设置过大可能会导致报错）
 
@@ -45,12 +29,9 @@ qq_data_cache: # QQ数据缓存设置
 debug: # 调试模式
   enable: false # 是否启用调试模式
 
-auto_restart_onebot: # 在Onebot实现端状态异常时自动重启Onebot实现端（需开启心跳包）
-  enable: true # 是否启用自动重启
+auto_restart_onebot:  # 在Onebot实现端状态异常时自动重启Onebot实现端（需开启心跳包）
+  enable: true  # 是否启用自动重启
 
-life: # 生命周期（未实现）
-  enable: true #是否启用
-  online_time: 9 #在线开始时间
-  offline_time: 22 #离线开始时间
-  max_online_time: 72 #最大在线时间（秒）
-  max_offline_time: 9 #最大离线时间（秒）
+command:  # 命令相关
+  command_start: "*"  # 命令起始符
+

@@ -1,10 +1,6 @@
 # coding:utf-8
-import threading
-import Lib.MuRainLib
-import Lib.ThreadPool
-import os,platform,time
-from PIL import Image
-from datetime import datetime
+from Lib import*
+import os,time,platform
 
 def machine_check():
     os_name = platform.system()
@@ -17,13 +13,12 @@ def machine_check():
                 return -3
     else:
         return -1
+
 checkcode=machine_check()
 if checkcode == -1:
     print("版本错误，请下载正确的版本")
     time.sleep(3)
-    Lib.MuRainLib.finalize_and_cleanup()
-elif checkcode == -2:
-    print(f"当前Windows版本过低，运行可能出现错误\n注意：我们将不会受理在此状态下运行的报错")
+    finalize_and_cleanup()
 elif checkcode == -3:
     print(f"当前Python版本过低，运行可能出现错误\n注意：我们将不会受理在此状态下运行的报错")
 
@@ -38,79 +33,18 @@ BANNER = r"""
 """
 BANNER_LINK = "https://github.com/GuzhMtangeroou/Aoki/"
 VERSION = "1.0"  # 版本
-VERSION_WEEK = "2025#1"  # 版本周
-CHECK_CODE = 2501
 
-def machine_check():
-    os_name = platform.system()
-    os_version = platform.version()
-    python_version=platform.python_version()
-    if os_name == "Windows":
-        if os_version.replace(".","") >= "6.3.9200".replace(".",""):
-            if python_version.replace(".","") >= "3.11.4".replace(".",""):
-                return 1
-            else:
-                return -3
-        else:
-            return -2
-    else:
-        return -1
-
-def color_text(text: str, text_color: tuple[int, int, int] = None, bg_color: tuple[int, int, int] = None):
-    text = text + "\033[0m" if text_color is not None or bg_color is not None else text
-    if text_color is not None:
-        text = f"\033[38;2;{text_color[0]};{text_color[1]};{text_color[2]}m" + text
-    if bg_color is not None:
-        text = f"\033[48;2;{bg_color[0]};{bg_color[1]};{bg_color[2]}m" + text
-    return text
-
-
-def get_gradient(start_color: tuple[int, int, int], end_color: tuple[int, int, int], length: float):
-    # length 为0-1的值，返回一个渐变色当前length的RGB颜色
-    return (
-        int(start_color[0] + (end_color[0] - start_color[0]) * length),
-        int(start_color[1] + (end_color[1] - start_color[1]) * length),
-        int(start_color[2] + (end_color[2] - start_color[2]) * length)
-    )
 
 # 主函数
 if __name__ == '__main__':
-    import Lib.Configs as Configs
-    if Configs.GlobalConfig().start_showcolorword:
-        banner_start_color = (14, 190, 255)
-        banner_end_color = (255, 66, 179)
-        color_banner = ""
-        banner = BANNER.split("\n")
-        for i in range(len(banner)):
-            for j in range(len(banner[i])):
-                color_banner += color_text(
-                    banner[i][j],
-                    get_gradient(
-                        banner_start_color,
-                        banner_end_color,
-                        ((j / (len(banner[i]) - 1) + i / (len(banner) - 1)) / 2)
-                    )
-                )
-            color_banner += "\n"
-        print(color_banner + color_text(BANNER_LINK, get_gradient(banner_start_color, banner_end_color, 0.5))
-            + color_text("\n正在加载 Lib...", banner_start_color), end="")
-    else:
-        print(BANNER)
-        print(BANNER_LINK)
-        print("正在加载 Lib...")
-
-    from Lib import *
-    print(f"Lib 加载完成")
+    print(BANNER)
+    print(BANNER_LINK)
     api = OnebotAPI.OnebotAPI()
-    Lib.ThreadPool.init()
-    request_list = []
+    ThreadPool.init()
     logger = Logger.logger
-
-    logger.info(f"开始运行，当前版本：{VERSION}({VERSION_WEEK})")
 
     api = OnebotAPI.OnebotAPI()
     ThreadPool.init()
-    request_list = []
 
     work_path = os.path.abspath(os.path.dirname(__file__))
     data_path = os.path.join(work_path, 'data')
@@ -121,32 +55,23 @@ if __name__ == '__main__':
     if not os.path.exists(cache_path):
         os.makedirs(cache_path)
 
-    # TODO: 把废物的版本检测删了
-    LibInfo.main_version, LibInfo.main_version_week = VERSION, VERSION_WEEK
-
-    # 版本检测
-    if LibInfo().version != LibInfo.main_version:
-        logger.warning("库版本不是最新，可能会发生异常\n"
-                       f"库版本:{LibInfo().version} Bot版本:{LibInfo.main_version}\n"
-                       "注意：我们将不会受理在此状态下运行的报错")
-
     bot_uid = Configs.global_config.user_id
     bot_name = Configs.global_config.nick_name
     bot_admin = Configs.global_config.bot_admin
 
-    PluginManager.load_plugins()
-    if len(PluginManager.plugins) > 0:
-        logger.info(f"插件导入完成，共成功导入 {len(PluginManager.plugins)} 个插件:")
-        for plugin in PluginManager.plugins:
+    ExsManager.load_plugins()
+    if len(ExsManager.plugins) > 0:
+        logger.info(f"共导入 {len(ExsManager.plugins)} 个插件，成功项如下：")
+        for plugin in ExsManager.plugins:
             try:
-                plugin_info = plugin["plugin"].PluginInfo()
+                plugin_info = plugin["prog"].PluginInfo()
                 if plugin_info.UID == "":
                     logger.warning("插件{} UID获取失败".format(plugin["name"]))
                 else:
-                    sed=Lib.PluginManager.on_extract(plugin_info.UID)
-                    if sed >= CHECK_CODE:
+                    sed=ExsManager.on_extract(plugin_info.UID)
+                    if sed >= UPDATE_CHECK_CODE:
                         logger.info(" - {}: {}  by {},UID:{}".format(plugin["name"], plugin_info.NAME, plugin_info.AUTHOR,plugin_info.UID))
-                    elif sed < CHECK_CODE:
+                    elif sed < UPDATE_CHECK_CODE:
                         logger.info("插件{} 适配于较旧的Bot版本，请及时维护".format(plugin["name"]))
                     else:
                         logger.info("插件{} 校验失败".format(plugin["name"]))
@@ -155,7 +80,7 @@ if __name__ == '__main__':
             except Exception as e:
                 logger.warning("插件{} 信息获取失败: {}".format(plugin["name"], repr(e)))
     else:
-        logger.warning("无插件成功导入！")
+        logger.warning("无插件成功导入")
 
     logger.info("将以{}:{}启动监听服务器"
                 .format(Configs.global_config.server_host, Configs.global_config.server_port))
@@ -165,7 +90,7 @@ if __name__ == '__main__':
 
     # 检测bot名称与botUID是否为空或未设置
     if bot_uid is None or bot_name == "" or bot_uid == 123456 or bot_name is None:
-        logger.info("BotUID或昵称来源：自动获取......")
+        logger.info("BotUID或昵称来源：自动获取")
 
         bot_info = api.get_login_info()
         if not isinstance(bot_info, dict):
@@ -189,12 +114,11 @@ if __name__ == '__main__':
     # 禁用werkzeug的日志记录
     log = logging.getLogger('werkzeug')
     log.disabled = True
-
     # 启动监听服务器
     try:
         logger.info("启动监听服务器")
         ListeningServer.server.serve_forever()
     except Exception as e:
-        logger.error(f"监听服务器启动失败：{repr(e)}") 
+        logger.error(f"监听服务器启动失败：{repr(e)}")
     finally:
         logger.info("监听服务器结束运行")
