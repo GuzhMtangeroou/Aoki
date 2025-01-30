@@ -6,7 +6,7 @@ def machine_check():
     os_name = platform.system()
     os_version = platform.version()
     python_version=platform.python_version()
-    if os_name == "Darwin":
+    if os_name == "Linux":
             if int(python_version.replace(".","")) >= int("3.11.4".replace(".","")):
                 return 1
             else:
