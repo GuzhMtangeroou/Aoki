@@ -1,10 +1,10 @@
-import Lib.PluginManager
+import Lib.ExsManager
 from Lib import *
 
 api = OnebotAPI.OnebotAPI()
 
 
-class PluginInfo(PluginManager.PluginInfo):
+class PluginInfo(ExsManager.PluginInfo):
     def __init__(self):
         super().__init__()
         self.NAME = "Helper"  # 插件名称
@@ -13,10 +13,10 @@ class PluginInfo(PluginManager.PluginInfo):
         self.DESCRIPTION = "帮助插件"  # 插件描述
         self.HELP_MSG = "发送“*help”或“*帮助”查看帮助"  # 插件帮助
         self.IS_HIDDEN = False
-        self.UID = "0bb9-fcdb-4b423f4e-52830210-8174-14f5"
+        self.UID = "09c5-9ff8-11fbb2e0-a7bdd951-19b3-1253"
 
 def get_help_text():
-    plugins = Lib.PluginManager.plugins
+    plugins = Lib.ExsManager.plugins
     text = f'技能列表'
     for plugin in plugins:
         try:
@@ -37,5 +37,5 @@ def help(event_type, event_data):
     )
 
 
-EventManager.register_keyword("*帮助", help)
-EventManager.register_keyword("*help", help)
+EventManager.register_keyword("帮助", help)
+EventManager.register_keyword("help", help)

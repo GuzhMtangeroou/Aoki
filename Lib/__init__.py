@@ -5,6 +5,7 @@ import os
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from Lib.MuRainLib import *
+from PIL import Image
 import Lib.OnebotAPI as OnebotAPI
 import Lib.QQRichText as QQRichText
 import Lib.EventManager as EventManager
@@ -14,30 +15,23 @@ import Lib.Configs as Configs
 import Lib.FileCacher as FileCacher
 import Lib.ThreadPool as ThreadPool
 import Lib.ListeningServer as ListeningServer
-import Lib.PluginManager as PluginManager
+import Lib.ExsManager as ExsManager
 import Lib.QQDataCacher as QQDataCacher
 import Lib.Command as Command
 import main as main
+import pystray
 
 # 扩展模块
 import Lib.Extra as Extra
 
 VERSION = "1.0"
 VERSION_WEEK = "25#1"
-UPDATE_CHECK_CODE = VERSION_WEEK.replace("#","0")
+UPDATE_CHECK_CODE = int(VERSION_WEEK.replace("#","0"))
 
 
 # Lib信息
 class LibInfo:
-    main_version, main_version_week = None, None
-
     def __init__(self):
         self.version = VERSION
         self.version_week = VERSION_WEEK
         self.update_version_code = UPDATE_CHECK_CODE
-
-    def get_lib_version(self):
-        return self.version, self.version_week
-
-    def get_main_version(self):
-        return self.main_version, self.main_version_week

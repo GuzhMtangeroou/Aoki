@@ -4,7 +4,9 @@ import traceback
 from dataclasses import dataclass
 
 import Lib.Logger as Logger
+import Lib.Configs as Configs
 from collections.abc import Callable
+command_start=Configs.GlobalConfig().command_start
 
 
 @dataclass
@@ -82,10 +84,11 @@ def unregister_event(event_type: tuple[str, str] | str | tuple[tuple[str, str] |
             register_event_list.remove(i)
 
 
-def register_keyword(keyword: str, func, model: str = KeywordModel.INCLUDE, arg: int = 0, *args, **kwargs) -> None:
+def register_keyword(keyword: str, func, model: str = KeywordModel.INCLUDE, arg: int = 0,cmdstart:bool =True, *args, **kwargs) -> None:
     """
     注册关键字
     :param keyword: 关键词
+    :param cmdstart: 命令起始符匹配
     :param func: 触发后调用的函数
     :param model: 匹配模式，支持BEGIN：仅当关键词位于消息开头时触发判定
                              END：仅当关键词位于消息末尾时触发判定
@@ -101,17 +104,30 @@ def register_keyword(keyword: str, func, model: str = KeywordModel.INCLUDE, arg:
 
     if args is None:
         args = []
-    register_keyword_list.append(
-        KeywordData(
-            keyword,
-            func,
-            arg,
-            args,
-            kwargs,
-            traceback.extract_stack()[-2].filename,
-            model
+    if cmdstart:
+        register_keyword_list.append(
+            KeywordData(
+                f"{command_start}{keyword}",
+                func,
+                arg,
+                args,
+                kwargs,
+                traceback.extract_stack()[-2].filename,
+                model
+            )
         )
-    )
+    else:
+        register_keyword_list.append(
+            KeywordData(
+                keyword,
+                func,
+                arg,
+                args,
+                kwargs,
+                traceback.extract_stack()[-2].filename,
+                model
+            )
+        )
     return
 
 

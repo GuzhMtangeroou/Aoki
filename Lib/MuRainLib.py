@@ -3,14 +3,12 @@ MuRainLib
 用于MuRain Bot框架
 """
 import atexit
-import hashlib
 import logging
 import os
 import sys
 import requests,urllib3
 import shutil
-import time,json,zipfile
-import random
+import time,json
 from collections import OrderedDict
 import Lib.Logger as Logger
 
@@ -54,24 +52,21 @@ def restart() -> None:
 
 def Check_upd():
     urllib3.disable_warnings()
-    headers={
-        "User-Agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36"
-    }
     a=requests.get("https://guzhmtangeroou.github.io/api.aoki.github.io/Version.json",verify=False)
     b=json.loads(a.text)
     return b
 
-def Download_upd(url, local_filename): 
+def Download_upd(url,): 
     # 发送HTTP请求获取远程文件
     with requests.get(url, stream=True,verify=False) as r:
         r.raise_for_status()  # 检查请求是否成功
-        with open(local_filename, 'wb') as f:
+        with open("upd.zip", 'wb') as f:
             for chunk in r.iter_content(chunk_size=8192): 
                 if chunk:  # 过滤掉保持活动的没有数据的块
                     f.write(chunk)
                     f.flush()
 
-    return local_filename
+    return "upd.zip"
 
 # 删除缓存文件
 def clean_cache() -> None:

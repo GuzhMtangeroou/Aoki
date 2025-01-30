@@ -4,7 +4,6 @@ OnebotAPI
 可以方便的调用Onebot的API
 """
 
-import json
 import Lib.Configs as Configs
 import Lib.EventManager as EventManager
 import Lib.Logger as Logger

@@ -410,7 +410,8 @@ class Node(Segment):
             self.name = name
             self.user_id = uid
             self.message = QQRichText(message).get_array()
-            super().__init__({"type": "node", "data": {"nickname": str(self.name), "user_id": str(self.user_id), "content": self.message}})
+            super().__init__({"type": "node", "data": {"nickname": str(self.name), "user_id": str(self.user_id),
+                                                       "content": self.message}})
         else:
             self.message_id = message_id
             super().__init__({"type": "node", "data": {"id": str(message_id)}})
@@ -422,13 +423,13 @@ class Node(Segment):
         self.name = name
         self.array["data"]["name"] = str(name)
 
-    def set_uid(self, uid):
-        self.uid = uid
-        self.array["data"]["uin"] = str(uid)
+    def set_uid(self, user_id):
+        self.user_id = user_id
+        self.array["data"]["uin"] = str(user_id)
 
     def render(self, group_id: int | None = None):
         if self.message_id is not None:
-            return f"[合并转发节点: {self.name}({self.uid}): {self.message}]"
+            return f"[合并转发节点: {self.name}({self.user_id}): {self.message}]"
         else:
             return f"[合并转发节点: {self.message_id}]"
 
@@ -533,13 +534,13 @@ class Forward(Segment):
 class XML(Segment):
     segment_type = "xml"
 
-    def __init__(self, xml):
-        self.xml = xml
-        super().__init__({"type": "xml", "data": {"xml": str(self.xml)}})
+    def __init__(self, data):
+        self.data = data
+        super().__init__({"type": "xml", "data": {"data": str(self.data)}})
 
-    def set_xml(self, xml):
-        self.xml = xml
-        self.array["data"]["xml"] = str(self.xml)
+    def set_xml_data(self, data):
+        self.data = data
+        self.array["data"]["data"] = str(self.data)
 
 
 class JSON(Segment):
@@ -547,11 +548,11 @@ class JSON(Segment):
 
     def __init__(self, data):
         self.data = data
-        super().__init__({"type": "json", "data": {"json": str(self.data)}})
+        super().__init__({"type": "json", "data": {"data": str(self.data)}})
 
     def set_json(self, data):
         self.data = data
-        self.array["data"]["json"] = str(self.data)
+        self.array["data"]["data"] = str(self.data)
 
 
 class QQRichText:
