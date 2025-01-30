@@ -6,14 +6,15 @@
  - 如何使用
 
 ## 在这之前
-😀📕📕针👍
+### ⚠Aoki不跟随MuRainBot2一同进行重构，但仍做出了较大改动，请注意适配⚠
+另外，😀📕📕针👍
 
 ## 部署
 > 首先我们需要下载这个项目
 1. 打开本项目的主页
-2. 点击“Code”按钮或直接从[Release](https://github.com/GuzhMtangeroou/Aoki/releases)中下载最新版本
+2. 点击“Code”按钮或从[Release](https://github.com/GuzhMtangeroou/Aoki/releases)中下载最新版本（建议）
+（若从Code下载）
 3. 点击“Download ZIP”
-> 什么？你说你找不到？这是链接，直接戳这个下载吧: [我是链接](https://github.com/GuzhMtangeroou/Aoki/archive/refs/heads/master.zip)
 ---
 > 很好，我相信你已经成功下载了这个项目，接下来开始配置~
 1. 打开下载的压缩包，解压
@@ -22,7 +23,7 @@
 3. 在终端运行 `python -m pip install -r requirements.txt`\
 ~~什么？你问我这个命令是干嘛的？它啊其实是用来安装本项目运行必须的依赖库的哦~~\
 ~~什么？你又问这个命令为什么运行不了？请检查你是否已经安装好了Python，以及你是否正确设置了环境变量，以及你是否已经将cmd/PowerShell切换到项目文件夹下~~
-4. 运行 `python main.py`
+4. 运行 `python main.py`或直接双击`main.py`
 > 很棒，你肯定已经成功运行了，那么此时你应该在终端内发现了几条log和一个ERROR提示，不要担心，这是正常情况，接下来我们来解决它~
 **附：~~（可能是）~~正常启动的log**
 ```text
@@ -34,9 +35,6 @@
  /_/    \_\___/|_|\_\_|
 
 https://github.com/GuzhMtangeroou/Aoki/
-正在加载 Lib...
-Lib 加载完成
-[2025-01-17 23:18:47] [main.py] [INFO]: 开始运行，当前版本：1.0(25#1)
 [2025-01-17 23:18:48] [main.py] [INFO]: 插件导入完成，共成功导入 x 个插件:
 [2025-01-17 23:18:48] [main.py] [INFO]:  - About: About  by ？,UID:0bb9-fcdb-4b423f4e-52830210-8174-14f5
 (以此类推)
@@ -61,6 +59,7 @@ Lib 加载完成
 - [NapCat](https://github.com/NapNeko/NapCatQQ)
 - [~~go-cqhttp~~](https://github.com/Mrs4s/go-cqhttp)
 #### 以上这些项目基本上均有详细的安装文档，请自行查看，在此我们使用Lagrange.Onebot进行示范
+#### ~~多说一句🤓☝️：据传NapCat被官方处刑概率较大~~
 有两种方法，1.使用sb.(somebody)写的小工具全自动安装(😀📕📕针👍)，2.手动安装
 > 使用😀📕📕写的小工具自动安装
 
@@ -73,7 +72,6 @@ Lib 加载完成
 > 手动安装
 
 自己看[Lagrange.Onebot](https://github.com/LagrangeDev/Lagrange.Core)的[文档](https://lagrangedev.github.io/Lagrange.Doc/)
-
 然后把Lagrange.Onebot的配置文件(`appsettings.json`)中的`Implementations`字段修改为以下内容:
 ```json
 "Implementations": [
@@ -98,7 +96,7 @@ Lib 加载完成
 > 恭喜你，你已经成功安装Onebot实现端，接下来我们开始配置Bot吧！
 
 首先用记事本打开`config.yml`
-您只需要在account.bot_admin中添加您自己的QQ号即可，其余的配置项暂时可以不用管他
+您只需要在account.bot_admin中添加您自己的QQ号即可，其余的配置项暂时可以不用管他（不添加也可以的来着）
 
 ---
 
@@ -109,4 +107,4 @@ Onebot实现端你自己启动吧，文档都有
 Bot运行命令为`python main.py`
 
 ### 至此，您已经成功安装并配置了Aoki，请尽情享用吧！
-> #### 更进一步: [了解如何自行编写插件](Writing_Plugins.md)
+> #### 更进一步: [了解如何自行编写插件](Writing_Extensions.md)
