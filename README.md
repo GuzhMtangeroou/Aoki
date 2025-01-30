@@ -1,3 +1,5 @@
+# ⚠Aoki不跟随MuRainBot2一同进行重构，但仍做出了较大改动，请注意适配⚠
+
 ![center](https://static.codemao.cn/pickduck/r1xbq-MY_kx.JPG)
 <h2>看板fu（bushi）</h2>
 <h1 align="center">Aoki-青木</h1>
@@ -19,8 +21,8 @@
     </a>
     <br>
   
-### 这是一个基于python适配onebot11协议的QQBot ~~(框架?)~~
-### 首先感谢您选择/使用了青木作为您的QQBot（框架）
+### 这是一个基于python适配onebot11协议的QQBot框架
+### 首先感谢您选择/使用了青木作为您的QQBot框架
 ##### ~~作者自己写着用的，有一些写的不好的地方还请见谅（不过估计也没人会用我这个项目吧）~~
 
 ### 当前版本：1.0（2025#2）
