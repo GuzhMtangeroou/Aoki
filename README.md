@@ -1,4 +1,4 @@
-![center](https://static.codemao.cn/pickduck/Hkq2gsCCA.jpg)
+![center](https://static.codemao.cn/pickduck/r1xbq-MY_kx.JPG)
 <h2>看板fu（bushi）</h2>
 <h1 align="center">Aoki-青木</h1>
 <p align="center" class="shields">
@@ -23,7 +23,7 @@
 ### 首先感谢您选择/使用了青木作为您的QQBot（框架）
 ##### ~~作者自己写着用的，有一些写的不好的地方还请见谅（不过估计也没人会用我这个项目吧）~~
 
-### 当前版本：1.0（2024#4）
+### 当前版本：1.0（2025#2）
 
 <details>
 <summary>基本目录结构</summary>
@@ -33,50 +33,45 @@
 │   ├─ group  每个群的相关的缓存文件
 │   │   ├─ 123  群号为123相关的缓存文件（示例）
 │   │   ...
-│   ├─ json     不属于某个单独群聊的Bot及插件的json临时/缓存文件
+│   ├─ cache     其他缓存文件
 │   ...
 ├─ Lagrange.Core    QQBot内核框架，此处以Lagrange.Core示例
 ├─ Lib          Lib库，本体和插件均需要依赖此Lib
 │   ├─ __init__.py     Lib
-│   ├─ BotController.py   用于控制Bot
-|   ├─ Configs.py      用于配置文件的一些功能
-│   ├─ EventManager.py 用于广播上报事件
-│   ├─ FileCacher.py   用于缓存、读取文件
-│   ├─ Logger.py       用于记录日志
-│   ├─ MuRainLib.py    用于提供一些零七八碎的函数
-│   ├─ OnebotAPI.py    用于调用OneBotAPI
-│   ├─ QQRichText.py   用于解析/处理QQ消息
-│   ├─ ThreadPool.py   用于多线程（线程池）处理
+│   ├─ BotController.py 控制Bot行为
+|   ├─ Configs.py       用于配置文件的一些功能
+│   ├─ EventManager.py  用于广播上报事件
+│   ├─ FileCacher.py    缓存、读取文件
+│   ├─ Logger.py        记录日志
+│   ├─ MuRainLib.py     提供一些零七八碎的函数
+│   ├─ OnebotAPI.py     调用OneBotAPI
+│   ├─ QQRichText.py    解析/处理QQ消息
+│   ├─ ThreadPool.py    多线程（线程池）处理
 │   ...
 ├─ logs
 │   ├─ latest.log       当日的日志
 │   ├─ xxxx-xx-xx.log  以往的日志
 │   ...
-├─ plugins
-|   ├─ Control.py   核心插件（别删，删了也没啥大事）
+├─ extensions 
+|   ├─ Control.py   核心插件（别删，删了也没啥大事，多点ERROR日志而已）
+│   ├─ pluginTemplates.py  插件模板
 │   ├─ xxx.py   xxx插件代码
 │   ├─ yyy.py   yyy插件代码 
-│   ...
-├─ plugin_configs
-│   ├─ pluginTemplates.py  插件模板
-│   ├─ xxx.yml  xxx插件的配置文件
-│   ├─ yyy.yml  yyy插件的配置文件
 │   ...
 ├─ tools  用于开发的小工具
 │   ...
 ├─ config.yml   配置文件
-├─ main.py      主程序（运行这个直接启动）
-├─ app.pyw      带启动界面的主程序（运行这个也可启动）
-└─ README.md    这个文件就不用解释了吧（？）
+├─ main.py      主程序
+└─ README.md    这个文件就不用解释了吧
 
-└─ README_en.md 诶你怎么似了（懒得翻译.png
+└─ README_en.md 诶你怎么似了（懒得翻译.png）
 ```
 
 </details>
 
 
 ## 部署
-**作者在python3.11.4编写、测试均未发现问题，其他版本暂未测试**
+**作者在python3.12.0编写、测试均未发现问题，3.11.4-3.12.3预期均运行正常（已测试：3.11.4、3.11.10、3.12.0、3.12.1、3.12.3）**
 
 ### 本项目[`文档`](docs/Readme.md) 
 
