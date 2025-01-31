@@ -47,9 +47,9 @@ register_keyword_list: list[KeywordData] = []
 def register_event(event_type: tuple[str, str] | str | tuple[tuple[str, str] | str], arg: int = 0) -> Callable:
     """
     注册事件，需要使用装饰器语法
-    :param event_type: 接收的事件类型，可以是一个字符串，也可以是一个列表，列表中的字符串会依次匹配，例如：
+    event_type: 接收的事件类型，可以是一个字符串，也可以是一个列表，列表中的字符串会依次匹配，例如：
     ('message', 'group') 或者 'message'，若为"all"或"*"则代表匹配所有事件
-    :param arg: 优先级，默认0
+    arg: 优先级，默认0
     :return: None
     """
 
@@ -74,7 +74,7 @@ def unregister_event(event_type: tuple[str, str] | str | tuple[tuple[str, str] |
     """
     取消注册事件
     用于取消注册一个事件，取消注册后插件将不再对此事件做出响应
-    :param event_type: 接收的事件类型，可以是一个字符串，也可以是一个列表，列表中的字符串会依次匹配，例如：
+    event_type: 接收的事件类型，可以是一个字符串，也可以是一个列表，列表中的字符串会依次匹配，例如：
     ('message', 'group') 或者 'message'
     :return: None
     """
@@ -84,29 +84,26 @@ def unregister_event(event_type: tuple[str, str] | str | tuple[tuple[str, str] |
             register_event_list.remove(i)
 
 
-def register_keyword(keyword: str, func, model: str = KeywordModel.INCLUDE, arg: int = 0,cmdstart:bool =True, *args, **kwargs) -> None:
+def register_start_keyword(keyword: str, func, model: str = KeywordModel.INCLUDE, arg: int = 0, *args, **kwargs) -> None:
     """
-    注册关键字
-    :param keyword: 关键词
-    :param cmdstart: 命令起始符匹配
-    :param func: 触发后调用的函数
-    :param model: 匹配模式，支持BEGIN：仅当关键词位于消息开头时触发判定
-                             END：仅当关键词位于消息末尾时触发判定
-                             INCLUDE： 消息中只要包含关键词就触发判定
-                             EXCLUDE： 消息中不包含关键词就触发判定
-                             EQUAL： 消息与关键词完全匹配时触发判定
-                             REGEX： 消息满足正则表达式时触发判定（此时关键词内容应为一个正则表达式）
-                             默认INCLUDE
-    :param arg: 优先级，默认0
-    :param args: 传给func的参数
+    注册匹配命令起始符的关键字
+    keyword: 关键词
+    func: 触发后调用的函数
+    model: 匹配模式，默认INCLUDE
+        BEGIN：仅当关键词位于消息开头时触发判定
+        END：仅当关键词位于消息末尾时触发判定
+        INCLUDE： 消息中只要包含关键词就触发判定
+        EXCLUDE： 消息中不包含关键词就触发判定
+        EQUAL： 消息与关键词完全匹配时触发判定
+        REGEX： 消息满足正则表达式时触发判定（此时关键词内容应为一个正则表达式）
+    arg: 优先级，默认0
+    args: 传给func的参数
     :return: None
     """
 
     if args is None:
         args = []
-    if cmdstart:
-        register_keyword_list.append(
-            KeywordData(
+    register_keyword_list.append(KeywordData(
                 f"{command_start}{keyword}",
                 func,
                 arg,
@@ -114,11 +111,28 @@ def register_keyword(keyword: str, func, model: str = KeywordModel.INCLUDE, arg:
                 kwargs,
                 traceback.extract_stack()[-2].filename,
                 model
-            )
-        )
-    else:
-        register_keyword_list.append(
-            KeywordData(
+            ))
+    
+def register_non_start_keyword(keyword: str, func, model: str = KeywordModel.INCLUDE, arg: int = 0, *args, **kwargs) -> None:
+    """
+    注册不匹配命令起始符的关键字
+    keyword: 关键词
+    func: 触发后调用的函数
+    model: 匹配模式，默认INCLUDE
+        BEGIN：仅当关键词位于消息开头时触发判定
+        END：仅当关键词位于消息末尾时触发判定
+        INCLUDE： 消息中只要包含关键词就触发判定
+        EXCLUDE： 消息中不包含关键词就触发判定
+        EQUAL： 消息与关键词完全匹配时触发判定
+        REGEX： 消息满足正则表达式时触发判定（此时关键词内容应为一个正则表达式）
+    arg: 优先级，默认0
+    args: 传给func的参数
+    :return: None
+    """
+
+    if args is None:
+        args = []
+    register_keyword_list.append(KeywordData(
                 keyword,
                 func,
                 arg,
@@ -126,21 +140,18 @@ def register_keyword(keyword: str, func, model: str = KeywordModel.INCLUDE, arg:
                 kwargs,
                 traceback.extract_stack()[-2].filename,
                 model
-            )
-        )
-    return
-
+            ))
 
 def unregister_keyword(keyword: str):
     """
     注销关键字
     用于取消注册一个关键词，注销后关键词会被取消被用于匹配
     需要传入对应的关键词字符串来将其取消注册，无法取消注册不属于此插件的关键词
-    :param keyword: 关键词
+    keyword: 关键词
     :return: None
     """
     for i in range(len(register_keyword_list)):
-        if (register_keyword_list[i].keyword == keyword and
+        if (register_keyword_list[i].keyword == keyword.replace("*","",1) and
                 register_event_list[i].by_file == traceback.extract_stack()[-2].filename):
             del register_keyword_list[i]
 
@@ -160,7 +171,7 @@ class Event:
         logger = Logger.logger
 
         if self.event_class == "all" or self.event_class == "*":
-            raise ValueError("不能将all或是*设为事件，因为会发生冲突。")
+            raise ValueError("不能将all或是*设为事件，可能导致冲突")
 
         # 事件扫描
         register_event_list.sort(key=lambda x: x.arg, reverse=True)
@@ -185,8 +196,8 @@ class Event:
                             flag = True
                             break
             except Exception as e:
-                logger.warning(f"在尝试处理事件上报{self.event_class} {self.event_data}给"
-                               f"{register_event.by_file}的函数{register_event.func.__name__}时出错：{repr(e)}")
+                logger.warning(f"在处理事件{self.event_class} {self.event_data}给"
+                               f"{register_event.by_file}的函数{register_event.func.__name__}时出现错误：{repr(e)}")
 
         # 关键词检测
         if isinstance(self.event_class, (tuple, list)):
@@ -234,9 +245,9 @@ class Event:
                         else:
                             raise ValueError(f"Unsupported model: {model}")
                     except Exception as e:
-                        logger.warning(f"在尝试处理事件上报关键词检测{self.event_class} {self.event_data}给"
+                        logger.warning(f"在处理关键词{self.event_class} {self.event_data}给"
                                        f"{register_keyword.by_file}的函数{register_keyword.func.__name__}"
-                                       f"时出错：{repr(e)}")
+                                       f"时出现错误：{repr(e)}")
 
 
 # 单元测试

@@ -516,19 +516,7 @@ class Forward(Segment):
 
 
 # 并不是很想写这个东西.png
-# class CustomizeForward(Segment):
-#     def __init__(self, title, content, source):
-#         self.title = title
-#         self.content = content
-#         self.source = source
-#         super().__init__({"type": "forward", "data": {"title": str(self.title)
-#         , "content": str(self.content), "source": str(self.source)}})
-#
-#     def set_title(self, title):
-#         self.array["data"]["title"] = str(self.title)
-#         self.title = title
-#
-#     def set_content(self, content):
+# 那就帮你删了好了
 
 
 class XML(Segment):
