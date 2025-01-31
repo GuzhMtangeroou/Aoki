@@ -57,17 +57,15 @@ class PluginInfo:
         self.AUTHOR:str = ""  # 插件作者
         self.VERSION:str = ""  # 插件版本
         self.DESCRIPTION:str = ""  # 插件描述
-        self.HELP_MSG:str = ""  # 插件帮助x
+        self.HELP_MSG:str = ""  # 插件帮助
         self.IS_HIDDEN:bool = False  # 插件是否隐藏（在/help命令中）
-        self.UID:str = ""
+        self.UID:str = "" #插件UID
 
 def extract_seed(identifier):
     # Remove dashes from the identifier
     clean_hex = identifier.replace('-', '')
-    
     # Extract the first 4 characters which represent the seed in hexadecimal
     seed_hex = clean_hex[:4]
-    
     # Convert the hexadecimal back to an integer
     seed_int = struct.unpack('>H', bytes.fromhex(seed_hex))[0]
     return seed_int
@@ -78,7 +76,7 @@ def on_extract(entry:str):
         identifier = entry.strip()
         seed = extract_seed(identifier)
         return seed
-    except Exception as e:
+    except:
         return -1
 
 @ThreadPool.async_task
@@ -93,13 +91,6 @@ def run_plugin_main(data):
 
         logger.debug(f"执行插件: {plugin['name']}")
         try:
-            # plugin_thread = threading.Thread(
-            #     target=plugin["plugin"].main,
-            #     args=(
-            #         data.event_json,
-            #         work_path)
-            # )
-            # plugin_thread.start()
             plugin["prog"].main(data.event_json, work_path)
         except Exception as e:
             logger.error(f"执行插件{plugin['name']}时发生错误: {repr(e)}")

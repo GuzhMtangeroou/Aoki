@@ -46,6 +46,9 @@ auto_restart_onebot:  # 在Onebot实现端状态异常时自动重启Onebot实�
 command:  # 命令相关
   command_start: "*"  # 命令起始符
 
+auto_check_update: #自动更新（仅启动时检测）
+  enable: true #是否启用
+  auto_download: true #是否自动下载
 """
 
 class Config:
@@ -117,6 +120,8 @@ class GlobalConfig(Config):
         self.debug = self.raw_config["debug"]["enable"]
         self.auto_restart_onebot = self.raw_config["auto_restart_onebot"]["enable"]
         self.command_start = self.raw_config["command"]["command_start"]
+        self.auto_check_update = self.raw_config["auto_check_update"]["enable"]
+        self.auto_download_update = self.raw_config["auto_check_update"]["auto_download"]
     def write_cache(self, item):
         super().write_cache(item)
         self.__init__()

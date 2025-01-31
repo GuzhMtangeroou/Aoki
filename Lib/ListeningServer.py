@@ -71,6 +71,7 @@ def post_data():
         data.post_type = "message"
 
     if data.post_type == "message":
+        #print(data.message) #抓虫子用的（bushi
         # 私聊消息
         if data.message_type == "private":
             message = data.message.render()
@@ -102,7 +103,7 @@ def post_data():
             user = QQDataCacher.get_group_user_data(data.group_id, data.user_id)
             message = data.message.render(group_id=data.group_id)
 
-            logger.info("收到群 {}({}) 内 {}({}) 的消息: {} ({})".format(
+            logger.info("收到群 {}(群号：{}) 内用户 {}(QQ：{}) 的消息: {} ({})".format(
                 group.group_name, group.group_id, user.get_group_name(), user.user_id, message,
                 data.message_id))
 
@@ -118,7 +119,7 @@ def post_data():
                     logger.error("核心插件异常")
 
         else:
-            logger.warning("收到未知上报: %s" % data.event_json)
+            logger.warning("收到未知事件: %s" % data.event_json)
 
     elif data.post_type == "request":
         # 加好友邀请
@@ -297,11 +298,11 @@ def post_data():
     elif data.post_type == "meta_event":
         if data.meta_event_type == "lifecycle":
             if data.sub_type == "enable":
-                logger.info("收到元事件：OneBot 启用")
+                logger.info("元事件：OneBot启用")
             elif data.sub_type == "disable":
-                logger.info("收到元事件：OneBot 停用")
+                logger.info("元事件：OneBot停用")
             elif data.sub_type == "connect":
-                logger.info("收到元事件：WebSocket 连接成功")
+                logger.info("元事件：Onebot连接成功")
         elif data.meta_event_type == "heartbeat":
             logger.debug("收到心跳包")
             # 检查心跳包是否正常
@@ -320,9 +321,9 @@ def post_data():
             heartbeat_interval = data.interval / 1000
 
         else:
-            logger.warning("收到未知上报: %s" % data.event_json)
+            logger.warning("未知上报: %s" % data.event_json)
     else:
-        logger.warning("收到未知上报: %s" % data.event_json)
+        logger.warning("未知上报: %s" % data.event_json)
 
     if data.post_type + "_type" in data:
         logger.debug("广播事件：%s" % data[data.post_type + "_type"])
