@@ -10,7 +10,7 @@ import requests,urllib3
 import shutil
 import time,json
 from collections import OrderedDict
-import Lib.Logger as Logger
+from Lib import Logger as Logger
 
 #  ____                     _                 __  __       _____       _       ____        _   ___  
 # |  _ \                   | |               |  \/  |     |  __ \     (_)     |  _ \      | | |__ \ 
@@ -50,23 +50,41 @@ def restart() -> None:
         # 关闭当前程序
         sys.exit()
 
-def Check_upd():
+def Check_and_download_update(checkcode,os,autodown:bool=True):
     urllib3.disable_warnings()
-    a=requests.get("https://guzhmtangeroou.github.io/api.aoki.github.io/Version.json",verify=False)
-    b=json.loads(a.text)
-    return b
-
-def Download_upd(url,): 
-    # 发送HTTP请求获取远程文件
-    with requests.get(url, stream=True,verify=False) as r:
-        r.raise_for_status()  # 检查请求是否成功
-        with open("upd.zip", 'wb') as f:
-            for chunk in r.iter_content(chunk_size=8192): 
-                if chunk:  # 过滤掉保持活动的没有数据的块
-                    f.write(chunk)
-                    f.flush()
-
-    return "upd.zip"
+    heads={
+        "user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0"
+    }
+    try:
+        a=requests.get("https://guzhmtangeroou.github.io/api.aoki.github.io/Version.json",verify=False,headers=heads)
+        b=json.loads(a.text)
+    except requests.exceptions.ConnectionError:
+        return 408
+    if int(b["data"]["LatestVersionWeek"]) >= checkcode:
+        if autodown:
+            try:
+                if os == "Windows":
+                    url=b["data"]["UpdLink-win32"]
+                elif os == "Linux":
+                    url=b["data"]["UpdLink-Linux"]
+                elif os == "Darwin":
+                    url=b["data"]["UpdLink-Darwin"]
+                else:
+                    return -1
+                with requests.get(url, stream=True,verify=False) as r:
+                    r.raise_for_status()  # 检查请求是否成功
+                    with open("upd.zip", 'wb') as f:
+                        for chunk in r.iter_content(chunk_size=8192): 
+                            if chunk:  # 过滤掉保持活动的没有数据的块
+                                f.write(chunk)
+                                f.flush()
+                return 200
+            except:
+                return -1
+        else:
+            return 200
+    else:
+        return 0
 
 # 删除缓存文件
 def clean_cache() -> None:
@@ -115,6 +133,4 @@ def finalize_and_cleanup():
     logger.info("即将关闭，正在删除缓存")
 
     clean_cache()
-    restarttime=time.strftime("%H:%M:%S %Y-%m-%d", time.localtime())
-    logger.info(f'[Aoki]Bot exited at {restarttime}')
     quit()

@@ -152,18 +152,6 @@ class SendMsgCommand(Command):
         BotController.send_message(QQRichText.QQRichText(kwargs.get("message")), user_id=kwargs.get("user_id"))
 
 
-class ExitCommand(Command):
-    def __init__(self):
-        super().__init__()
-        self.command_help = "EXIT: 退出程序"
-        self.command_name = "EXIT"
-
-    def run(self, input_command: CommandParsing, kwargs):
-        MuRainLib.finalize_and_cleanup()
-
-
-
-
 class RunAPICommand(Command):
     def __init__(self):
         super().__init__()
@@ -236,6 +224,24 @@ class HelpCommand(Command):
     def run(self, input_command: CommandParsing, kwargs):
         help_text = "命令帮助：\n" + "\n".join([command.command_help for command in commands])
         print(help_text)
+
+class ExitCommand(Command):
+    def __init__(self):
+        super().__init__()
+        self.command_help = "EXIT: 退出程序"
+        self.command_name = "EXIT"
+
+    def run(self, input_command: CommandParsing, kwargs):
+        MuRainLib.finalize_and_cleanup()
+
+class RestartCommand(Command):
+    def __init__(self):
+        super().__init__()
+        self.command_help = "RESTART: 重启程序"
+        self.command_name = "RESTART"
+
+    def run(self, input_command: CommandParsing, kwargs):
+        MuRainLib.restart()
 
 
 def run_command(input_command):
@@ -316,7 +322,7 @@ def listening_command():
             input_command = input_command[1:]
         input_command = CommandParsing(input_command)
         run_command(input_command)
-        logger.debug(f"Command: {input_command.command_list}")
+        logger.debug(f"收到指令输入: {input_command.command_list}")
 
 
 def start_command_listener():

@@ -1,21 +1,15 @@
 # coding:utf-8
 from Lib import*
-import os,time,platform
-
-import threading,pystray,PIL.Image
+import os,time,platform,threading,pystray
 
 def machine_check():
     os_name = platform.system()
-    os_version = platform.version()
     python_version=platform.python_version()
     if os_name == "Windows":
-        if int(os_version.replace(".","")) >= int("6.3.9200".replace(".","")):
             if int(python_version.replace(".","")) >= int("3.11.4".replace(".","")):
                 return 1
             else:
                 return -3
-        else:
-            return -2
     else:
         return -1
 
@@ -24,8 +18,6 @@ if checkcode == -1:
     print("版本错误，请下载正确的版本")
     time.sleep(3)
     finalize_and_cleanup()
-elif checkcode == -2:
-    print(f"当前Windows版本过低，运行可能出现错误\n注意：我们将不会受理在此状态下运行的报错")
 elif checkcode == -3:
     print(f"当前Python版本过低，运行可能出现错误\n注意：我们将不会受理在此状态下运行的报错")
 
@@ -39,7 +31,6 @@ BANNER = r"""
  /_/    \_\___/|_|\_\_|                         
 """
 BANNER_LINK = "https://github.com/GuzhMtangeroou/Aoki/"
-VERSION = "1.0"  # 版本
 
 
 # 主函数
@@ -61,7 +52,8 @@ if __name__ == '__main__':
 
     if not os.path.exists(cache_path):
         os.makedirs(cache_path)
-
+    logger.debug("开始运行")
+    logger.info("开始运行")
     bot_uid = Configs.global_config.user_id
     bot_name = Configs.global_config.nick_name
     bot_admin = Configs.global_config.bot_admin
@@ -117,6 +109,18 @@ if __name__ == '__main__':
     Command.start_command_listener()
     logger.info("开启命令输入")
     logininfo=BotController.api.get_login_info()
+
+    #检查更新
+    if Configs.global_config.auto_check_update:
+        updresult=Check_and_download_update(checkcode=LibInfo().update_version_code,os=LibInfo().os,autodown=Configs.global_config.auto_download_update)
+        if updresult == 0:
+            logger.info("发现新版本")
+        elif updresult == -1:
+            logger.error("检查更新时出现错误")
+        elif updresult == 408:
+            logger.error("更新数据获取超时")
+        elif updresult == 200:
+            logger.info("更新upd.zip已下载完成，请手动安装更新")
 
     # 禁用werkzeug的日志记录
     log = logging.getLogger('werkzeug')

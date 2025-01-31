@@ -19,13 +19,13 @@ import Lib.ExsManager as ExsManager
 import Lib.QQDataCacher as QQDataCacher
 import Lib.Command as Command
 import main as main
-import pystray
+import platform
 
 # 扩展模块
-import Lib.Extra as Extra
+import Lib.AddtionPackage as AddtionPackage
 
 VERSION = "1.0"
-VERSION_WEEK = "25#1"
+VERSION_WEEK = "25#2"
 UPDATE_CHECK_CODE = int(VERSION_WEEK.replace("#","0"))
 
 
@@ -35,3 +35,4 @@ class LibInfo:
         self.version = VERSION
         self.version_week = VERSION_WEEK
         self.update_version_code = UPDATE_CHECK_CODE
+        self.os = platform.system()

@@ -1,7 +1,6 @@
 
 """
 OnebotAPI
-可以方便的调用Onebot的API
 """
 
 import Lib.Configs as Configs
@@ -19,9 +18,9 @@ cconfig = Configs.GlobalConfig()
 class OnebotAPI:
     def __init__(self, host: str = cconfig.api_host, port: int = cconfig.api_port, original: bool = False):
         """
-        :param host: 调用的ip
-        :param port: 调用的端口
-        :param original: 是否返回全部json（默认只返回data内）
+        host: 调用的ip
+        port: 调用的端口
+        original: 是否返回全部json（默认只返回data内）
         """
         # if url != "":
         #     url_list = urllib.parse.urlparse(url)
@@ -98,8 +97,8 @@ class OnebotAPI:
     def send_private_msg(self, user_id: int, message: str | list[dict]):
         """
         发送私聊消息
-        :param user_id: 用户id
-        :param message: 消息内容
+        user_id: 用户id
+        message: 消息内容
         :return:
         """
         data = {
@@ -111,8 +110,8 @@ class OnebotAPI:
     def send_group_msg(self, group_id: int, message: str | list[dict]):
         """
         发送群消息
-        :param group_id: 群号
-        :param message: 消息内容
+        group_id: 群号
+        message: 消息内容
         :return:
         """
         data = {
@@ -124,9 +123,9 @@ class OnebotAPI:
     def send_msg(self, user_id: int = -1, group_id: int = -1, message: str | list[dict] = ""):
         """
         发送消息
-        :param user_id: 用户id
-        :param group_id: 群号
-        :param message: 消息内容
+        user_id: 用户id
+        group_id: 群号
+        message: 消息内容
         :return:
         """
         if user_id != -1 and group_id != -1:
@@ -143,7 +142,7 @@ class OnebotAPI:
     def delete_msg(self, message_id: int):
         """
         删除消息
-        :param message_id: 消息id
+        message_id: 消息id
         :return:
         """
         data = {
@@ -154,7 +153,7 @@ class OnebotAPI:
     def get_msg(self, message_id: int):
         """
         获取消息
-        :param message_id: 消息id
+        message_id: 消息id
         :return:
         """
         data = {
@@ -165,7 +164,7 @@ class OnebotAPI:
     def get_forward_msg(self, message_id: int):
         """
         获取合并转发消息
-        :param message_id: 消息id
+        message_id: 消息id
         :return:
         """
         data = {
@@ -176,8 +175,8 @@ class OnebotAPI:
     def send_like(self, user_id: int, times: int = 1):
         """
         发送点赞
-        :param user_id: 用户id
-        :param times: 点赞次数
+        user_id: 用户id
+        times: 点赞次数
         :return:
         """
         data = {
@@ -189,9 +188,9 @@ class OnebotAPI:
     def set_group_kick(self, group_id: int, user_id: int, reject_add_request: bool = False):
         """
         群组踢人
-        :param group_id: 群号
-        :param user_id: 用户id
-        :param reject_add_request: 拒绝加群请求
+        group_id: 群号
+        user_id: 用户id
+        reject_add_request: 拒绝加群请求
         :return:
         """
         data = {
@@ -204,9 +203,9 @@ class OnebotAPI:
     def set_group_ban(self, group_id: int, user_id: int, duration: int = 30):
         """
         群组单人禁言
-        :param group_id: 群号
-        :param user_id: 用户id
-        :param duration: 禁言时长，单位秒，无法取消禁言
+        group_id: 群号
+        user_id: 用户id
+        duration: 禁言时长，单位秒，无法取消禁言
         :return:
         """
         data = {
@@ -219,9 +218,9 @@ class OnebotAPI:
     def set_group_anonymous_ban(self, group_id: int, anonymous: dict, duration: int = 600):
         """
         群组匿名用户禁言
-        :param group_id: 群号
-        :param anonymous: 匿名用户对象
-        :param duration: 禁言时长，单位秒，无法取消禁言
+        group_id: 群号
+        anonymous: 匿名用户对象
+        duration: 禁言时长，单位秒，无法取消禁言
         :return:
         """
         data = {
@@ -234,8 +233,8 @@ class OnebotAPI:
     def set_group_whole_ban(self, group_id: int, enable: bool = True):
         """
         群组全员禁言
-        :param group_id: 群号
-        :param enable: 是否禁言
+        group_id: 群号
+        enable: 是否禁言
         :return:
         """
         data = {
@@ -247,9 +246,9 @@ class OnebotAPI:
     def set_group_admin(self, group_id: int, user_id: int, enable: bool = True):
         """
         群组设置管理员
-        :param group_id: 群号
-        :param user_id: 用户id
-        :param enable: 是否设置管理员
+        group_id: 群号
+        user_id: 用户id
+        enable: 是否设置管理员
         :return:
         """
         data = {
@@ -262,9 +261,9 @@ class OnebotAPI:
     def set_group_card(self, group_id: int, user_id: int, card: str = ""):
         """
         设置群名片（群备注）
-        :param group_id: 群号
-        :param user_id: 用户id
-        :param card: 群名片内容
+        group_id: 群号
+        user_id: 用户id
+        card: 群名片内容
         :return:
         """
         data = {
@@ -277,8 +276,8 @@ class OnebotAPI:
     def set_group_name(self, group_id: int, group_name: str):
         """
         设置群名
-        :param group_id: 群号
-        :param group_name: 群名
+        group_id: 群号
+        group_name: 群名
         :return:
         """
         data = {
@@ -289,8 +288,8 @@ class OnebotAPI:
 
     def set_group_leave(self, group_id: int, is_dismiss: bool = False):
         """
-        :param group_id: 群号
-        :param is_dismiss: 是否解散，如果登录号是群主，则仅在此项为True时能够解散
+        group_id: 群号
+        is_dismiss: 是否解散，如果登录号是群主，则仅在此项为True时能够解散
         :return:
         """
         data = {
@@ -302,10 +301,10 @@ class OnebotAPI:
     def set_group_special_title(self, group_id: int, user_id: int, special_title: str = "", duration: int = -1):
         """
         设置群组专属头衔
-        :param group_id: 群号
-        :param user_id: 要设置的QQ号
-        :param special_title: 专属头衔，不填或空字符串表示删除专属头衔
-        :param duration: 专属头衔有效期，-1表示永久，其他值表示在此时间之前专属头衔会消失
+        group_id: 群号
+        user_id: 要设置的QQ号
+        special_title: 专属头衔，不填或空字符串表示删除专属头衔
+        duration: 专属头衔有效期，-1表示永久，其他值表示在此时间之前专属头衔会消失
         :return:
         """
         data = {
@@ -321,9 +320,9 @@ class OnebotAPI:
     def set_friend_add_request(self, flag: str, approve: bool = True, remark: str = ""):
         """
         设置好友添加请求
-        :param flag: 请求flag
-        :param approve: 是否同意请求
-        :param remark: 添加后的好友备注
+        flag: 请求flag
+        approve: 是否同意请求
+        remark: 添加后的好友备注
         :return:
         """
         data = {
@@ -336,10 +335,10 @@ class OnebotAPI:
     def set_group_add_request(self, flag: str, sub_type: str = "add", approve: bool = True, reason: str = ""):
         """
         设置群添加请求
-        :param flag: 请求flag
-        :param sub_type: 添加请求类型，请参考api文档
-        :param approve: 是否同意请求
-        :param reason: 拒绝理由
+        flag: 请求flag
+        sub_type: 添加请求类型，请参考api文档
+        approve: 是否同意请求
+        reason: 拒绝理由
         :return:
         """
         data = {
@@ -360,8 +359,8 @@ class OnebotAPI:
     def get_stranger_info(self, user_id: int, no_cache: bool = False):
         """
         获取陌生人信息
-        :param user_id: 对方QQ号
-        :param no_cache: 是否不使用缓存（使用缓存可能更新不及时，但响应更快）
+        user_id: 对方QQ号
+        no_cache: 是否不使用缓存（使用缓存可能更新不及时，但响应更快）
         :return:
         """
         data = {
@@ -380,8 +379,8 @@ class OnebotAPI:
     def get_group_info(self, group_id: int, no_cache: bool = False):
         """
         获取群信息
-        :param group_id: 群号
-        :param no_cache: 是否不使用缓存（使用缓存可能更新不及时，但响应更快）
+        group_id: 群号
+        no_cache: 是否不使用缓存（使用缓存可能更新不及时，但响应更快）
         :return:
         """
         data = {
@@ -400,9 +399,9 @@ class OnebotAPI:
     def get_group_member_info(self, group_id: int, user_id: int, no_cache: bool = False):
         """
         获取群成员信息
-        :param group_id: 群号
-        :param user_id: QQ号
-        :param no_cache: 是否不使用缓存（使用缓存可能更新不及时，但响应更快）
+        group_id: 群号
+        user_id: QQ号
+        no_cache: 是否不使用缓存（使用缓存可能更新不及时，但响应更快）
         :return:
         """
         data = {
@@ -415,8 +414,8 @@ class OnebotAPI:
     def get_group_member_list(self, group_id: int, no_cache: bool = False):
         """
         获取群成员列表
-        :param group_id: 群号
-        :param no_cache: 是否不使用缓存（使用缓存可能更新不及时，但响应更快）
+        group_id: 群号
+        no_cache: 是否不使用缓存（使用缓存可能更新不及时，但响应更快）
         :return:
         """
         data = {
@@ -428,8 +427,8 @@ class OnebotAPI:
     def get_group_honor_info(self, group_id: int, type_: str = "all"):
         """
         获取群荣誉信息
-        :param group_id: 群号
-        :param type_: 要获取的群荣誉类型，可传入 talkative performer legend strong_newbie emotion 以分别获取单个类型的群荣誉数据，或传入 all 获取所有数据
+        group_id: 群号
+        type_: 要获取的群荣誉类型，可传入 talkative performer legend strong_newbie emotion 以分别获取单个类型的群荣誉数据，或传入 all 获取所有数据
         :return:
         """
         data = {
@@ -462,9 +461,9 @@ class OnebotAPI:
     def get_record(self, file: str, out_format: str = "mp3", out_file: str = ""):
         """
         获取语音
-        :param file: 文件ID
-        :param out_format: 输出格式，mp3或amr，默认mp3
-        :param out_file: 输出文件名，默认使用文件ID
+        file: 文件ID
+        out_format: 输出格式，mp3或amr，默认mp3
+        out_file: 输出文件名，默认使用文件ID
         :return:
         """
         data = {
@@ -477,7 +476,7 @@ class OnebotAPI:
     def get_image(self, file: str):
         """
         获取图片
-        :param file: 文件ID
+        file: 文件ID
         :return:
         """
         data = {
