@@ -4,7 +4,7 @@
 account: # 账号相关
   user_id:    # QQ账号（留空则自动获取）
   nick_name: "" #昵称（留空则自动获取）
-  bot_admin: [3569709728,403253,3876750974]
+  bot_admin: []
 
 #网络
 api: # Api设置
@@ -14,7 +14,20 @@ api: # Api设置
 server: # 监听服务器设置
   host: '127.0.0.1'
   port: 5701
-  
+
+#命令
+command:  # 命令相关
+  command_start: "*"  # 命令起始符
+
+#启动
+extensions: # 插件相关自定义设置
+  dictionary: 'auto' #插件目录（默认auto，即同文件夹下的“extensions”目录）
+  configdic: 'auto' #插件目录（默认auto，即同文件夹下的“extensions_configs”目录）
+
+auto_check_update: #自动更新（仅启动时检测）
+  enable: false #是否启用
+  auto_download: true #是否自动下载
+
 #其他
 thread_pool: 
   max_workers: 12 # 线程池最大线程数
@@ -30,10 +43,3 @@ debug: # 调试模式
 
 auto_restart_onebot:  # 在Onebot实现端状态异常时自动重启Onebot实现端（需开启心跳包）
   enable: true  # 是否启用自动重启
-
-command:  # 命令相关
-  command_start: "*"  # 命令起始符
-
-auto_check_update: #自动更新（仅启动时检测）
-  enable: false #是否启用
-  auto_download: true #是否自动下载

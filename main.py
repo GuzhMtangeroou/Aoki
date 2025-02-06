@@ -58,6 +58,11 @@ if __name__ == '__main__':
     bot_name = Configs.global_config.nick_name
     bot_admin = Configs.global_config.bot_admin
 
+    if ExsManager.change_dic(Configs.global_config.exdic) == 1:
+        logger.info(f"插件目录已更改为{Configs.global_config.exdic}")
+    if Configs.change_dic(Configs.global_config.exconfdic) == 1:
+        logger.info(f"插件配置目录已更改为{Configs.global_config.exconfdic}")
+
     ExsManager.load_plugins()
     if len(ExsManager.plugins) > 0:
         logger.info(f"共导入 {len(ExsManager.plugins)} 个插件，成功项如下：")
@@ -96,6 +101,7 @@ if __name__ == '__main__':
             logger.error(f"获取BotUID与昵称失败，可能会导致严重问题({repr(bot_info)})")
         elif "user_id" in bot_info and "nickname" in bot_info:
             bot_uid, bot_name = bot_info["user_id"], bot_info["nickname"]
+            QQRichText.setuid(bot_name)
             raw_config = Configs.global_config.raw_config
             raw_config["account"]["user_id"] = bot_uid
             raw_config["account"]["nick_name"] = bot_name

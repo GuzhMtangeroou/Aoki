@@ -20,7 +20,7 @@ def get_help_text():
     text = f'技能列表'
     for plugin in plugins:
         try:
-            plugin_info = plugin["plugin"].PluginInfo()
+            plugin_info = plugin["prog"].PluginInfo()
             if plugin_info.HELP_MSG and plugin_info.IS_HIDDEN is False:
                 text += "\n{}-{}".format(plugin_info.NAME, plugin_info.HELP_MSG)
         except:
@@ -37,5 +37,5 @@ def help(event_type, event_data):
     )
 
 
-EventManager.register_keyword("帮助", help)
-EventManager.register_keyword("help", help)
+EventManager.register_start_keyword("帮助", help)
+EventManager.register_start_keyword("help", help)
