@@ -133,13 +133,13 @@ def KugouMusicSearch(event_class, event_data: BotController.Event):
             BotController.send_message(QQRichText.QQRichText(QQRichText.Reply(event_data["message_id"]), "未知的指令或参数，请检查输入是否合法"),group_id=event_data.group_id)
     time.sleep(5)
 
-EventManager.register_keyword("163Play，id=", NeteaseMusicPlay_id,model="BEGIN")
-EventManager.register_keyword("music.163.com/#/song", NeteaseMusicPlay_Link,cmdstart=False)
-EventManager.register_keyword("music.163.com/song", NeteaseMusicPlay_Link,cmdstart=False)
-EventManager.register_keyword("163Play ", NeteaseMusicSearch,model="BEGIN")
-EventManager.register_keyword("QQPlay ", QQMusicSearch,model="BEGIN")
-EventManager.register_keyword("KugouPlay ", QQMusicSearch,model="BEGIN")
-EventManager.register_keyword("Play", Gethelp,model="EQUAL")
+EventManager.register_start_keyword("163Play，id=", NeteaseMusicPlay_id,model="BEGIN")
+EventManager.register_start_keyword("music.163.com/#/song", NeteaseMusicPlay_Link,cmdstart=False)
+EventManager.register_start_keyword("music.163.com/song", NeteaseMusicPlay_Link,cmdstart=False)
+EventManager.register_start_keyword("163Play ", NeteaseMusicSearch,model="BEGIN")
+EventManager.register_start_keyword("QQPlay ", QQMusicSearch,model="BEGIN")
+EventManager.register_start_keyword("KugouPlay ", QQMusicSearch,model="BEGIN")
+EventManager.register_start_keyword("Play", Gethelp,model="EQUAL")
 
 def get_id(text):
     # 匹配url的正则表达式

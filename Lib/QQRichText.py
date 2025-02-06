@@ -10,6 +10,11 @@ import Lib.OnebotAPI as OnebotAPI
 import Lib.QQDataCacher as QQDataCacher
 import Lib.Logger as Logger
 
+botname=0
+
+def setuid(uid):
+    global botname
+    botname=uid
 
 # CQ解码
 def cq_decode(text, in_cq: bool = False) -> str:
