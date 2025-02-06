@@ -5,20 +5,20 @@
 
 目录我就不详细说了，[`readme`](../README.md)里面有
 
-我们要说的是其中对于插件最重要的plugins与plugin_configs文件夹
+我们要说的是其中对于插件最重要的extensions与extensions_configs文件夹（自定义了插件和插件配置文件目录的论外啊喵）
 
- - `plugins`文件夹是用来存放插件的，里面需要放插件的源码
- - `plugin_configs`文件夹是用来存放插件的配置文件，里面需要有插件的配置文件
+ - `extensions`文件夹是用来存放插件的，里面需要放插件的源码
+ - `extensions_configs`文件夹是用来存放插件的配置文件，里面需要有插件的配置文件
 
 ---
 
 接下来我们要说的是插件系统，插件系统是非常重要的一部分 ~~（毕竟没了插件就单一个框架啥也干不了）~~
 
-插件系统负责导入插件的部分在`Lib\PluginManager.py`中
+插件系统负责导入插件的部分在`Lib\ExsManager.py`中
 
 导入完成后便会将全部成功导入的插件存在一个列表里，格式如下
 ```python
-[{"name": "plugin's filename", "plugin": plugin1}, ...]
+[{"name": "plugin's filename", "prog": plugin1}, ...] #prog:programの缩写
 ```
 
 当框架收到上报时则会将上报的信息传递给插件（说白了就是执行一个函数）然后由插件自行处理
@@ -35,8 +35,8 @@
 > 
 > 这个插件需要实现在私聊与群聊中发送hello自动回复Hello World!
 
-首先新建一个python文件在plugins文件夹下，命名为`HelloWorld.py`
-> 插件需要以大驼峰写法命名，后缀必须为`.py`
+首先新建一个python文件在extensions文件夹下，命名为`HelloWorld.py`
+> 插件尽量以大驼峰写法命名（你不用也管不了），后缀必须为`.py`
 
 然后导入作者写~~了114514年~~的~~Sh*t hill~~SDK
 ```python
@@ -64,7 +64,9 @@ class PluginInfo:
 第二种则是注册事件
 
 我们先写第一种也就是注册关键词
+注册关键词的用法即可实现大部分功能
 
+先写好关键词触发后执行的函数
 ```python
 def hello_world(event_type, event_data: BotController.Event):  # 这俩参数必须得有
     if event_data.message_type == "private":  # 判断是群聊事件还是私聊事件
@@ -73,9 +75,15 @@ def hello_world(event_type, event_data: BotController.Event):  # 这俩参数必
     else:
         # 群聊
         BotController.send_message("Hello World!", user_id=event_data.user_id, group_id=event_data.group_id)
-
-        
-EventManager.register_keyword("hello", hello_world, model="EQUAL")  # 注册关键词hello，并设置为完全匹配
+```
+对于关键词注册，有两种模式
+①匹配命令起始符模式
+```python        
+EventManager.register_start_keyword("hello", hello_world, model="EQUAL")  # 注册关键词hello，并设置为完全匹配
+```
+②不匹配命令起始符模式
+```python        
+EventManager.register_non_start_keyword("hello", hello_world, model="EQUAL")  # 注册关键词hello，并设置为完全匹配
 ```
 
 第二种写法
