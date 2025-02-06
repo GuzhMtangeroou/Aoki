@@ -56,7 +56,7 @@ https://github.com/GuzhMtangeroou/Aoki/
 - [Lagrange.Onebot](https://github.com/LagrangeDev/Lagrange.Core)
 - [OpenShamrock](https://github.com/whitechi73/OpenShamrock)
 - [LLOneBot](https://github.com/LLOneBot/LLOneBot)
-- [NapCat](https://github.com/NapNeko/NapCatQQ)
+- [~~NapCat~~](https://github.com/NapNeko/NapCatQQ)
 - [~~go-cqhttp~~](https://github.com/Mrs4s/go-cqhttp)
 #### 以上这些项目基本上均有详细的安装文档，请自行查看，在此我们使用Lagrange.Onebot进行示范
 #### ~~多说一句🤓☝️：据传NapCat被官方处刑概率较大~~
@@ -95,7 +95,7 @@ https://github.com/GuzhMtangeroou/Aoki/
 ### 配置
 > 恭喜你，你已经成功安装Onebot实现端，接下来我们开始配置Bot吧！
 
-首先用记事本打开`config.yml`
+首先用记事本或VSCode打开`config.yml`
 您只需要在account.bot_admin中添加您自己的QQ号即可，其余的配置项暂时可以不用管他（不添加也可以的来着）
 
 ---
