@@ -6,6 +6,14 @@ work_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 data_path = os.path.join(work_path, "data")
 exs_config_path = os.path.join(work_path, "extensions_configs")
 
+def change_dic(a):
+    if a == "auto":
+        return 0
+    else:
+        global exs_config_path
+        exs_config_path = a
+        return 1
+
 if not os.path.exists(exs_config_path):
     os.makedirs(exs_config_path)
 
@@ -27,9 +35,21 @@ server: # 监听服务器设置
   host: '127.0.0.1'
   port: 5701
   
+#命令
+command:  # 命令相关
+  command_start: "*"  # 命令起始符
+
+extensions: # 插件相关自定义设置
+  dictionary: 'auto' #插件目录（默认auto，即同文件夹下的“extensions”目录
+  configdic: 'auto' #插件目录（默认auto，即同文件夹下的“extensions_configs”目录
+
+auto_check_update: #自动更新（仅启动时检测）
+  enable: false #是否启用
+  auto_download: true #是否自动下载
+
 #其他
 thread_pool: 
-  max_workers: 8 # 线程池最大线程数
+  max_workers: 12 # 线程池最大线程数
 
 qq_data_cache:  # QQ数据缓存设置
   enable: true  # 是否启用缓存（非常不推荐关闭缓存，对于对于需要无缓存的场景，推荐在插件内自行调用api来获取而非关闭此配置项）
@@ -42,13 +62,6 @@ debug: # 调试模式
 
 auto_restart_onebot:  # 在Onebot实现端状态异常时自动重启Onebot实现端（需开启心跳包）
   enable: true  # 是否启用自动重启
-
-command:  # 命令相关
-  command_start: "*"  # 命令起始符
-
-auto_check_update: #自动更新（仅启动时检测）
-  enable: true #是否启用
-  auto_download: true #是否自动下载
 """
 
 class Config:
@@ -122,6 +135,8 @@ class GlobalConfig(Config):
         self.command_start = self.raw_config["command"]["command_start"]
         self.auto_check_update = self.raw_config["auto_check_update"]["enable"]
         self.auto_download_update = self.raw_config["auto_check_update"]["auto_download"]
+        self.exdic = self.raw_config["extensions"]["dictionary"]
+        self.exconfdic = self.raw_config["extensions"]["configdic"]
     def write_cache(self, item):
         super().write_cache(item)
         self.__init__()

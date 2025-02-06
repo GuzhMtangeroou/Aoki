@@ -14,6 +14,13 @@ extensions_path = os.path.join(work_path, "extensions")
 if not os.path.exists(extensions_path):
     os.makedirs(extensions_path)
 
+def change_dic(a):
+    if a == "auto":
+        return 0
+    else:
+        global extensions_path
+        extensions_path = a
+        return 1
 
 def load_plugins():
     global plugins
